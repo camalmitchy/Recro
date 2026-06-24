@@ -1,1 +1,0 @@
-import{t as e}from"./AdminShell-B1nGGg6O.js";import{d as t,g as n,l as r,n as i}from"./index-CH4BfXdQ.js";var a=n();function o(){let{user:n,loading:o}=i();return o?(0,a.jsx)(`div`,{className:`min-h-screen grid place-items-center text-muted-foreground`,children:`Loading…`}):n?(0,a.jsx)(e,{children:(0,a.jsx)(r,{})}):(0,a.jsx)(t,{to:`/join-us`})}export{o as component};

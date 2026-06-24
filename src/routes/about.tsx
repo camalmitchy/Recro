@@ -127,6 +127,9 @@ function AboutPage() {
             src={drKarume}
             alt="Dr. Michelle Karume"
             className="object-contain w-full h-full"
+            loading="lazy"
+            width={800}
+            height={1000}
           />
         </div>
       </section>
@@ -169,7 +172,7 @@ function AboutPage() {
             {audiences.map((a) => (
               <div key={a.title}>
                 <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-primary-soft text-primary-deep">
-                  <img src={a.icon} alt={a.title} className="h-8 w-8" />
+                  <img src={a.icon} alt={a.title} className="h-8 w-8" loading="lazy" width={56} height={56} />
                 </span>
                 <h3 className="mt-5 text-base font-semibold">{a.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
@@ -217,6 +220,9 @@ function AboutPage() {
                 src={ctaLeft}
                 alt=""
                 className="h-full w-full object-cover"
+                loading="lazy"
+                width={400}
+                height={600}
               />
             </div>
 
@@ -228,7 +234,7 @@ function AboutPage() {
                 We're here to listen and walk with you.
               </p>
               <Button asChild size="lg" className="mt-8 rounded-full bg-[#517a61] hover:bg-[#3d5c49] text-white px-8">
-                <Link to="/booking" search={{ service: undefined }}>Book a Session</Link>
+                <Link to="/booking" search={{ service: undefined }} preload="intent">Book a Session</Link>
               </Button>
             </div>
 
@@ -237,6 +243,9 @@ function AboutPage() {
                 src={ctaRight}
                 alt=""
                 className="h-full w-full object-cover"
+                loading="lazy"
+                width={400}
+                height={600}
               />
             </div>
           </div>

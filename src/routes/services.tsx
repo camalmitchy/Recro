@@ -90,6 +90,9 @@ function ServicesPage() {
           src={therapySession}
           alt="Therapy session"
           className="absolute inset-0 h-full w-full object-cover"
+          fetchPriority="high"
+          width={1920}
+          height={1080}
         />
 
         {/* Dark overlay for text visibility */}
@@ -109,10 +112,10 @@ function ServicesPage() {
                 From individual sessions to family work and organisational wellness — we build the right journey with you.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link to="/contact" className="btn-primary inline-flex items-center gap-2">
+                <Link to="/contact" preload="intent" className="btn-primary inline-flex items-center gap-2">
                   Talk to us <ArrowRight size={16} />
                 </Link>
-                <Link to="/booking" search={{ service: undefined }} className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border border-white/40 text-white px-6 py-2.5 rounded-xl font-semibold transition inline-flex items-center gap-2">
+                <Link to="/booking" search={{ service: undefined }} preload="intent" className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border border-white/40 text-white px-6 py-2.5 rounded-xl font-semibold transition inline-flex items-center gap-2">
                   Book a session
                 </Link>
               </div>
@@ -136,7 +139,7 @@ function ServicesPage() {
 
               {/* Icon */}
               <div className="relative z-10 h-12 w-12 rounded-full bg-muted/30 flex items-center justify-center mb-5">
-                <img src={service.icon} alt={`${service.title} icon`} className="h-6 w-6 object-contain" />
+                <img src={service.icon} alt={`${service.title} icon`} className="h-6 w-6 object-contain" loading="lazy" width={48} height={48} />
               </div>
 
               {/* Content */}
@@ -206,10 +209,10 @@ function ServicesPage() {
             A short intake call helps match you with the right therapist and approach. We're here to guide you.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link to="/contact" className="btn-primary">
+            <Link to="/contact" preload="intent" className="btn-primary">
               Talk to us
             </Link>
-            <Link to="/booking" search={{ service: undefined }} className="btn-secondary">
+            <Link to="/booking" search={{ service: undefined }} preload="intent" className="btn-secondary">
               Book a session
             </Link>
           </div>

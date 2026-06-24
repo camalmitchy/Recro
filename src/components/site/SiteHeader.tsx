@@ -42,8 +42,8 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="container-page flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-3">
-          <img src={logoIcon} alt="Recro Group Logo" className="h-11 w-11 object-contain" />
+        <Link to="/" className="flex items-center gap-3" preload="intent">
+          <img src={logoIcon} alt="Recro Group Logo" className="h-11 w-11 object-contain" loading="lazy" width={44} height={44} />
           <span className="flex flex-col leading-none">
             <span className="text-xl font-bold tracking-tight text-foreground">Recro Group</span>
             <span className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground mt-0.5">Restoring families</span>
@@ -66,7 +66,7 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-2">
           {!user ? (
-            <Link to="/join-us" className="hidden sm:inline-flex btn-primary">Join Us</Link>
+            <Link to="/join-us" preload="intent" className="hidden sm:inline-flex btn-primary">Join Us</Link>
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger className="grid h-10 w-10 place-items-center rounded-full bg-primary-soft text-primary-deep text-sm font-semibold border border-border hover:bg-primary/15 transition" aria-label="Account menu">
@@ -79,13 +79,13 @@ export function SiteHeader() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild className="focus:bg-primary-soft focus:text-primary-deep">
-                  <Link to="/admin">
+                  <Link to="/admin" preload="intent">
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     Admin Dashboard
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className="focus:bg-primary-soft focus:text-primary-deep">
-                  <Link to="/profile">
+                  <Link to="/profile" preload="intent">
                     <User className="mr-2 h-4 w-4" />
                     My Profile
                   </Link>
@@ -115,6 +115,7 @@ export function SiteHeader() {
               <Link
                 key={n.to}
                 to={n.to}
+                preload="intent"
                 onClick={() => setOpen(false)}
                 className="px-3 py-2.5 rounded-xl text-sm font-medium text-foreground hover:bg-primary-soft"
               >
@@ -122,7 +123,7 @@ export function SiteHeader() {
               </Link>
             ))}
             {!user && (
-              <Link to="/join-us" onClick={() => setOpen(false)} className="btn-primary mt-2">Join Us</Link>
+              <Link to="/join-us" preload="intent" onClick={() => setOpen(false)} className="btn-primary mt-2">Join Us</Link>
             )}
           </div>
         </div>
