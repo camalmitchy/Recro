@@ -1,8 +1,14 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, User, LogOut, LayoutDashboard } from "lucide-react";
+import { Menu, X, User, LogOut, LayoutDashboard, ChevronDown } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import logoIcon from "@/assets/icons/logo_icon.png";
+import individualIcon from "@/assets/icons/individual-therapy.svg";
+import familyIcon from "@/assets/icons/family-therapy.svg";
+import couplesIcon from "@/assets/icons/couples-therapy.svg";
+import groupIcon from "@/assets/icons/group-therapy.svg";
+import griefIcon from "@/assets/icons/grief-camp.svg";
+import corporateIcon from "@/assets/icons/corporate-speaking.svg";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,10 +18,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+const services = [
+  { slug: "individual", label: "Individual Therapy", icon: individualIcon, description: "One-on-one psychotherapy" },
+  { slug: "couples", label: "Couples Therapy", icon: couplesIcon, description: "Relationship counselling" },
+  { slug: "family", label: "Family Therapy", icon: familyIcon, description: "Whole-family sessions" },
+  { slug: "group", label: "Group Therapy", icon: groupIcon, description: "Shared healing experience" },
+  { slug: "children", label: "Grief Camps", icon: griefIcon, description: "Support for children" },
+  { slug: "corporate", label: "Corporate Speaking", icon: corporateIcon, description: "Workplace wellness" },
+];
+
 const nav = [
   { to: "/", label: "Home" },
   { to: "/grief-camp", label: "Grief Camp" },
-  { to: "/services", label: "Services" },
   { to: "/about", label: "About" },
   { to: "/insights", label: "Insights" },
   { to: "/faq", label: "FAQ" },
@@ -31,6 +45,7 @@ function initials(name?: string | null, email?: string | null) {
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -51,17 +66,109 @@ export function SiteHeader() {
         </Link>
 
         <nav className="hidden lg:flex items-center gap-1">
-          {nav.map((n) => (
+          <Link
+            to="/"
+            activeOptions={{ exact: true }}
+            activeProps={{ className: "text-primary-deep bg-primary-soft" }}
+            className="px-3 py-2 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
+          >
+            Home
+          </Link>
+
+          <Link
+            to="/grief-camp"
+            activeProps={{ className: "text-primary-deep bg-primary-soft" }}
+            className="px-3 py-2 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
+          >
+            Grief Camp
+          </Link>
+
+          {/* Services Dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setServicesOpen(true)}
+            onMouseLeave={() => setServicesOpen(false)}
+          >
             <Link
-              key={n.to}
-              to={n.to}
-              activeOptions={{ exact: n.to === "/" }}
+              to="/services"
               activeProps={{ className: "text-primary-deep bg-primary-soft" }}
-              className="px-3 py-2 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
+              className="px-3 py-2 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-surface transition-colors inline-flex items-center gap-1"
             >
-              {n.label}
+              Services
+              <ChevronDown size={14} className={`transition-transform ${servicesOpen ? 'rotate-180' : ''}`} />
             </Link>
-          ))}
+
+            {servicesOpen && (
+              <div className="absolute top-full left-0 pt-1 w-[320px]">
+                <div className="rounded-2xl border border-border bg-background shadow-[var(--shadow-lift)] overflow-hidden">
+                  <div className="p-2">
+                    {services.map((service) => (
+                      <Link
+                        key={service.slug}
+                        to="/services/$slug"
+                        params={{ slug: service.slug }}
+                        className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-primary-soft transition-colors group"
+                        onClick={() => setServicesOpen(false)}
+                      >
+                        <div className="mt-0.5 h-10 w-10 rounded-full bg-muted-foreground/[0.08] flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
+                          <img src={service.icon} alt="" className="h-5 w-5 object-contain" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-foreground group-hover:text-primary-deep transition-colors">
+                            {service.label}
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            {service.description}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                  <div className="border-t border-border bg-surface/50 px-4 py-2.5">
+                    <Link
+                      to="/services"
+                      className="text-xs font-semibold text-primary-deep hover:text-primary transition-colors inline-flex items-center gap-1"
+                      onClick={() => setServicesOpen(false)}
+                    >
+                      View all services →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <Link
+            to="/about"
+            activeProps={{ className: "text-primary-deep bg-primary-soft" }}
+            className="px-3 py-2 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
+          >
+            About
+          </Link>
+
+          <Link
+            to="/insights"
+            activeProps={{ className: "text-primary-deep bg-primary-soft" }}
+            className="px-3 py-2 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
+          >
+            Insights
+          </Link>
+
+          <Link
+            to="/faq"
+            activeProps={{ className: "text-primary-deep bg-primary-soft" }}
+            className="px-3 py-2 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
+          >
+            FAQ
+          </Link>
+
+          <Link
+            to="/contact"
+            activeProps={{ className: "text-primary-deep bg-primary-soft" }}
+            className="px-3 py-2 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
+          >
+            Contact
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -111,17 +218,101 @@ export function SiteHeader() {
       {open && (
         <div className="lg:hidden border-t border-border bg-background">
           <div className="container-page py-3 flex flex-col gap-1">
-            {nav.map((n) => (
-              <Link
-                key={n.to}
-                to={n.to}
-                preload="intent"
-                onClick={() => setOpen(false)}
-                className="px-3 py-2.5 rounded-xl text-sm font-medium text-foreground hover:bg-primary-soft"
+            <Link
+              to="/"
+              preload="intent"
+              onClick={() => setOpen(false)}
+              className="px-3 py-2.5 rounded-xl text-sm font-medium text-foreground hover:bg-primary-soft"
+            >
+              Home
+            </Link>
+
+            <Link
+              to="/grief-camp"
+              preload="intent"
+              onClick={() => setOpen(false)}
+              className="px-3 py-2.5 rounded-xl text-sm font-medium text-foreground hover:bg-primary-soft"
+            >
+              Grief Camp
+            </Link>
+
+            {/* Mobile Services Section */}
+            <div className="mt-1 mb-1">
+              <button
+                onClick={() => setServicesOpen(!servicesOpen)}
+                className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-foreground hover:bg-primary-soft"
               >
-                {n.label}
-              </Link>
-            ))}
+                Services
+                <ChevronDown size={16} className={`transition-transform ${servicesOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {servicesOpen && (
+                <div className="mt-1 pl-4 space-y-1">
+                  {services.map((service) => (
+                    <Link
+                      key={service.slug}
+                      to="/services/$slug"
+                      params={{ slug: service.slug }}
+                      onClick={() => {
+                        setOpen(false);
+                        setServicesOpen(false);
+                      }}
+                      className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
+                    >
+                      <img src={service.icon} alt="" className="h-5 w-5 object-contain opacity-60" />
+                      {service.label}
+                    </Link>
+                  ))}
+                  <Link
+                    to="/services"
+                    onClick={() => {
+                      setOpen(false);
+                      setServicesOpen(false);
+                    }}
+                    className="block px-3 py-2 rounded-lg text-sm text-primary-deep hover:bg-primary-soft transition-colors font-medium"
+                  >
+                    View all services →
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            <Link
+              to="/about"
+              preload="intent"
+              onClick={() => setOpen(false)}
+              className="px-3 py-2.5 rounded-xl text-sm font-medium text-foreground hover:bg-primary-soft"
+            >
+              About
+            </Link>
+
+            <Link
+              to="/insights"
+              preload="intent"
+              onClick={() => setOpen(false)}
+              className="px-3 py-2.5 rounded-xl text-sm font-medium text-foreground hover:bg-primary-soft"
+            >
+              Insights
+            </Link>
+
+            <Link
+              to="/faq"
+              preload="intent"
+              onClick={() => setOpen(false)}
+              className="px-3 py-2.5 rounded-xl text-sm font-medium text-foreground hover:bg-primary-soft"
+            >
+              FAQ
+            </Link>
+
+            <Link
+              to="/contact"
+              preload="intent"
+              onClick={() => setOpen(false)}
+              className="px-3 py-2.5 rounded-xl text-sm font-medium text-foreground hover:bg-primary-soft"
+            >
+              Contact
+            </Link>
+
             {!user && (
               <Link to="/join-us" preload="intent" onClick={() => setOpen(false)} className="btn-primary mt-2">Join Us</Link>
             )}
