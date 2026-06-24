@@ -43,6 +43,7 @@ const allContent = [
         excerpt:
             "As years go by, relationships tend to move and take all kinds of turns and twists.",
         readTime: "6 min",
+        image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800",
     },
     {
         id: "art-2",
@@ -52,6 +53,7 @@ const allContent = [
         excerpt:
             "What to say (and not say) when a colleague returns to work after a loss.",
         readTime: "5 min",
+        image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800",
     },
     {
         id: "art-3",
@@ -61,6 +63,7 @@ const allContent = [
         excerpt:
             "A simple structure that turns most arguments into a chance to grow closer.",
         readTime: "7 min",
+        image: "https://images.unsplash.com/photo-1516589091380-5d8e87df6999?w=800",
     },
     {
         id: "art-4",
@@ -70,6 +73,7 @@ const allContent = [
         excerpt:
             "Why a child laughing the day after a loss doesn't mean they're 'fine'.",
         readTime: "6 min",
+        image: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800",
     },
     {
         id: "art-5",
@@ -79,15 +83,7 @@ const allContent = [
         excerpt:
             "Tiny first steps for people who've been thinking about it for a while.",
         readTime: "4 min",
-    },
-    {
-        id: "art-6",
-        type: "article",
-        category: "Relationships",
-        title: "Boundaries that breathe",
-        excerpt:
-            "Boundaries as care for the relationship — not walls against the person.",
-        readTime: "5 min",
+        image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800",
     },
     {
         id: "art-7",
@@ -97,6 +93,7 @@ const allContent = [
         excerpt:
             "What anxiety is actually doing in the body, and how therapy quiets it.",
         readTime: "6 min",
+        image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=800",
     },
 
     // VIDEOS
@@ -157,20 +154,9 @@ const allContent = [
         thumbnail: "https://i.ytimg.com/vi/f3omumMGIw0/hqdefault.jpg",
         therapist: "Dr. Michelle Karume",
     },
-    {
-        id: "vid-6",
-        type: "video",
-        category: "Workplace",
-        title: "Boundaries that breathe",
-        excerpt: "Boundaries as care, not walls — for couples, families and teams.",
-        duration: "4:48",
-        videoId: "",
-        thumbnail: "",
-        therapist: "Dr. Michelle Karume",
-    },
 ];
 
-// Popular videos for carousel
+// Popular videos for carousel - only videos with actual content
 const popularVideos = [
     {
         id: "pop-1",
@@ -198,18 +184,18 @@ const popularVideos = [
     },
     {
         id: "pop-4",
-        title: "Boundaries that breathe",
-        duration: "4:48",
-        videoId: "",
-        thumbnail: "",
+        title: "Expectations in relationships",
+        duration: "4 min",
+        videoId: "6yd3gLyuR_0",
+        thumbnail: "https://i.ytimg.com/vi/6yd3gLyuR_0/hqdefault.jpg",
         therapist: "Dr. Michelle Karume",
     },
     {
         id: "pop-5",
-        title: "Anxiety, told simply",
-        duration: "4:30",
-        videoId: "",
-        thumbnail: "",
+        title: "Forgiveness",
+        duration: "6:15",
+        videoId: "f3omumMGIw0",
+        thumbnail: "https://i.ytimg.com/vi/f3omumMGIw0/hqdefault.jpg",
         therapist: "Dr. Michelle Karume",
     },
 ];
@@ -282,9 +268,9 @@ function VideoCard({
 
     return (
         <div
-            className={`group rounded-2xl border border-border bg-card overflow-hidden card-lift ${compact ? "min-w-[280px]" : ""}`}
+            className={`group rounded-2xl border border-border bg-card overflow-hidden card-lift ${compact ? "min-w-[320px] w-[320px]" : ""}`}
         >
-            <div className="relative aspect-video bg-black overflow-hidden">
+            <div className={`relative bg-black overflow-hidden ${compact ? "aspect-[4/3]" : "aspect-video"}`}>
                 {!isPlaying ? (
                     <>
                         <img
@@ -327,10 +313,12 @@ function VideoCard({
                 </div>
             )}
             {compact && (
-                <div className="p-4">
-                    <h4 className="text-sm font-semibold line-clamp-2">{video.title}</h4>
+                <div className="p-6 flex flex-col">
+                    <h4 className="text-lg font-semibold leading-snug line-clamp-2">
+                        {video.title}
+                    </h4>
                     {video.therapist && (
-                        <p className="mt-1 text-xs text-muted-foreground">
+                        <p className="mt-3 text-sm text-muted-foreground">
                             {video.therapist}
                         </p>
                     )}
@@ -399,7 +387,7 @@ function InsightsPage() {
                                 navigate relationships, grief, and life.
                             </p>
                             <div className="mt-8">
-                                <Button
+                                {/* <Button
                                     size="lg"
                                     className="rounded-full"
                                     onClick={() => {
@@ -412,7 +400,7 @@ function InsightsPage() {
                                     }}
                                 >
                                     View all Insights
-                                </Button>
+                                </Button> */}
                             </div>
                         </div>
                     </div>
@@ -492,7 +480,7 @@ function InsightsPage() {
                                 onClick={() => handleSelectCategory("Articles")}
                                 className="text-sm font-medium text-primary-deep hover:underline inline-flex items-center gap-1"
                             >
-                                View all insights <ArrowRight size={14} />
+                                View all Articles <ArrowRight size={14} />
                             </button>
                         )}
 
@@ -502,7 +490,7 @@ function InsightsPage() {
                                 onClick={() => handleSelectCategory("Articles")}
                                 className="text-sm font-medium text-primary-deep hover:underline inline-flex items-center gap-1"
                             >
-                                View all insights <ArrowRight size={14} />
+                                View all Articles <ArrowRight size={14} />
                             </button>
                         )}
                     </div>
@@ -541,8 +529,19 @@ function InsightsPage() {
                                 )}
 
                                 {content.type === "article" && (
-                                    <div className="relative aspect-video bg-gradient-to-br from-primary-soft via-background to-surface-2">
-                                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,color-mix(in_oklab,var(--primary)_25%,transparent),transparent_60%)]" />
+                                    <div className="relative aspect-video bg-surface-2 overflow-hidden">
+                                        {"image" in content && content.image ? (
+                                            <img
+                                                src={content.image}
+                                                alt={content.title}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <>
+                                                <div className="absolute inset-0 bg-gradient-to-br from-primary-soft via-background to-surface-2" />
+                                                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,color-mix(in_oklab,var(--primary)_25%,transparent),transparent_60%)]" />
+                                            </>
+                                        )}
                                     </div>
                                 )}
 
@@ -613,7 +612,7 @@ function InsightsPage() {
                             </button>
                         </div>
 
-                        <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
+                        <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-2">
                             {popularVideos.map((video) => (
                                 <VideoCard key={video.id} video={video} compact />
                             ))}

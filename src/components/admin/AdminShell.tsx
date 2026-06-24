@@ -1,11 +1,26 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import {
   LayoutDashboard, CalendarDays, Inbox, Users, CreditCard, HeartHandshake,
   Mic2, Video, BookOpen, FileText, HelpCircle, MessageSquare, Mail, Star,
   Stethoscope, UserCog, Shield, BarChart3, Settings, ScrollText, Bell,
-  Search, Plus, ChevronDown,
+  Search, Plus, ChevronDown, User, LogOut,
 } from "lucide-react";
 import type { ReactNode } from "react";
+import { useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; group: string };
 
@@ -36,6 +51,28 @@ const NAV: NavItem[] = [
 export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const groups = Array.from(new Set(NAV.map((n) => n.group)));
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate({ to: "/" });
+  };
+
+  function initials(name?: string | null, email?: string | null) {
+    const src = (name || email || "U").trim();
+    const parts = src.split(/\s+/);
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    return src.slice(0, 2).toUpperCase();
+  }
+
+  // Mock notifications - replace with actual data from your backend
+  const notifications = [
+    { id: 1, title: "New booking received", time: "5 min ago", unread: true },
+    { id: 2, title: "Payment confirmed", time: "1 hour ago", unread: true },
+    { id: 3, title: "New inquiry submitted", time: "2 hours ago", unread: false },
+  ];
 
   return (
     <div className="min-h-screen flex bg-[var(--admin-bg)] text-foreground">
@@ -58,11 +95,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
                     <Link
                       key={n.to}
                       to={n.to}
-                      className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                        active
-                          ? "bg-primary-soft text-primary-deep"
-                          : "text-foreground/70 hover:bg-[var(--admin-bg)] hover:text-foreground"
-                      }`}
+                      className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${active
+                        ? "bg-primary-soft text-primary-deep"
+                        : "text-foreground/70 hover:bg-[var(--admin-bg)] hover:text-foreground"
+                        }`}
                     >
                       <n.icon size={15} strokeWidth={2} />
                       <span className="truncate">{n.label}</span>
@@ -80,25 +116,108 @@ export function AdminShell({ children }: { children: ReactNode }) {
 
       <div className="flex-1 min-w-0 flex flex-col">
         <header className="h-16 border-b border-[var(--admin-border)] bg-[var(--admin-surface)] flex items-center gap-4 px-6 sticky top-0 z-20">
-          <div className="flex-1 max-w-md relative">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <input
-              placeholder="Search customers, bookings, payments…"
-              className="w-full pl-9 pr-3 h-9 rounded-lg bg-[var(--admin-bg)] border border-[var(--admin-border)] text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-            />
+          <div className="flex-1" />
+          <div className="flex items-center gap-3 ml-auto">
+            <div className="max-w-md relative">
+              <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <input
+                placeholder="Search customers, bookings, payments…"
+                className="w-full pl-9 pr-3 h-9 rounded-lg bg-[var(--admin-bg)] border border-[var(--admin-border)] text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              />
+            </div>
+            <button className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold px-3 h-9 rounded-lg bg-[var(--admin-primary)] text-white hover:opacity-90">
+              <Plus size={14} /> Quick action
+            </button>
+            <Popover open={notificationsOpen} onOpenChange={setNotificationsOpen}>
+              <PopoverTrigger asChild>
+                <button
+                  aria-label="Notifications"
+                  className="relative grid h-9 w-9 place-items-center rounded-lg hover:bg-[var(--admin-bg)] transition-colors"
+                >
+                  <Bell size={16} />
+                  {notifications.some(n => n.unread) && (
+                    <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-[var(--coral)]" />
+                  )}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-0" align="end">
+                <div className="p-4 border-b border-border">
+                  <h3 className="font-semibold text-sm">Notifications</h3>
+                </div>
+                <div className="max-h-[400px] overflow-y-auto">
+                  {notifications.length === 0 ? (
+                    <div className="p-8 text-center text-sm text-muted-foreground">
+                      No notifications
+                    </div>
+                  ) : (
+                    notifications.map((notification) => (
+                      <div
+                        key={notification.id}
+                        className={`p-4 border-b border-border hover:bg-surface transition-colors cursor-pointer ${notification.unread ? "bg-primary-soft/30" : ""
+                          }`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium">{notification.title}</p>
+                            <p className="text-xs text-muted-foreground mt-1">{notification.time}</p>
+                          </div>
+                          {notification.unread && (
+                            <span className="h-2 w-2 rounded-full bg-primary-deep shrink-0 mt-1.5" />
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+                <div className="p-3 border-t border-border">
+                  <button className="text-xs text-primary-deep hover:underline w-full text-center">
+                    View all notifications
+                  </button>
+                </div>
+              </PopoverContent>
+            </Popover>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-2 pl-1.5 pr-2 h-9 rounded-lg hover:bg-[var(--admin-bg)] transition-colors">
+                <span className="grid h-7 w-7 place-items-center rounded-full bg-primary-soft text-primary-deep text-xs font-semibold">
+                  {user ? initials(user.user_metadata?.full_name, user.email) : "RA"}
+                </span>
+                <span className="hidden sm:inline text-sm font-medium">
+                  {user?.user_metadata?.full_name || "Admin"}
+                </span>
+                <ChevronDown size={14} className="text-muted-foreground" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="flex flex-col gap-0.5">
+                  <span className="text-sm font-semibold truncate">
+                    {user?.user_metadata?.full_name || user?.email || "Admin"}
+                  </span>
+                  {user?.email && (
+                    <span className="text-[11px] font-normal text-muted-foreground truncate">
+                      {user.email}
+                    </span>
+                  )}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className="focus:bg-primary-soft focus:text-primary-deep">
+                  <Link to="/admin">
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    Admin Dashboard
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="focus:bg-primary-soft focus:text-primary-deep">
+                  <Link to="/profile">
+                    <User className="mr-2 h-4 w-4" />
+                    My Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:text-destructive focus:bg-destructive/10">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-          <button className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold px-3 h-9 rounded-lg bg-[var(--admin-primary)] text-white hover:opacity-90">
-            <Plus size={14} /> Quick action
-          </button>
-          <button aria-label="Notifications" className="relative grid h-9 w-9 place-items-center rounded-lg hover:bg-[var(--admin-bg)]">
-            <Bell size={16} />
-            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-[var(--coral)]" />
-          </button>
-          <button className="flex items-center gap-2 pl-1.5 pr-2 h-9 rounded-lg hover:bg-[var(--admin-bg)]">
-            <span className="grid h-7 w-7 place-items-center rounded-full bg-primary-soft text-primary-deep text-xs font-semibold">RA</span>
-            <span className="hidden sm:inline text-sm font-medium">Admin</span>
-            <ChevronDown size={14} className="text-muted-foreground" />
-          </button>
         </header>
         <main className="flex-1 min-w-0">{children}</main>
       </div>

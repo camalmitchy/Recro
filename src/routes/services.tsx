@@ -62,9 +62,9 @@ const services = [
   },
   {
     id: "05",
-    slug: "children",
+    slug: "grief",
     icon: griefCampIcon,
-    title: "Grief camp",
+    title: "Grief Camp",
     description: "Therapy for children and teens through play, art, storytelling and conversation.",
     duration: "45 minutes",
     price: "From KES 4,500",
@@ -148,7 +148,7 @@ function ServicesPage() {
                   {service.description}
                 </p>
 
-                {/* Meta Info - Clean horizontal line separator */}
+                {/* Meta Info */}
                 <div className="border-t border-border/50 pt-4 mb-5">
                   <div className="flex items-start justify-between text-sm">
                     <div>
@@ -163,13 +163,12 @@ function ServicesPage() {
                 </div>
 
                 {/* CTA */}
-                <Link
-                  to="/services/$slug"
-                  params={{ slug: service.slug }}
+                <a
+                  href={`/services/${service.slug}`}
                   className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground/80 hover:text-foreground transition-colors uppercase tracking-[0.12em]"
                 >
                   View Service <ArrowRight size={14} strokeWidth={1.5} />
-                </Link>
+                </a>
               </div>
             </article>
           ))}

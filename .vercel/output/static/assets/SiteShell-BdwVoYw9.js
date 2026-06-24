@@ -1,0 +1,1 @@
+import{c as e}from"./createLucideIcon-BkY-ghWC.js";import{n as t,t as n}from"./SiteFooter-BwlZCxxh.js";var r=e();function i({children:e}){return(0,r.jsxs)(`div`,{className:`min-h-screen flex flex-col bg-background`,children:[(0,r.jsx)(t,{}),(0,r.jsx)(`main`,{className:`flex-1`,children:e}),(0,r.jsx)(n,{})]})}export{i as t};

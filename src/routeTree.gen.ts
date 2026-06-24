@@ -27,7 +27,6 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminTherapistsRouteImport } from './routes/admin.therapists'
 import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonials'
@@ -139,11 +138,6 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
-} as any)
-const ServicesSlugRoute = ServicesSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => ServicesRoute,
 } as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
@@ -266,7 +260,7 @@ export interface FileRoutesByFullPath {
   '/media': typeof MediaRoute
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/services': typeof ServicesRouteWithChildren
+  '/services': typeof ServicesRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/appointments': typeof AdminAppointmentsRoute
@@ -289,7 +283,6 @@ export interface FileRoutesByFullPath {
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/therapists': typeof AdminTherapistsRoute
   '/admin/users': typeof AdminUsersRoute
-  '/services/$slug': typeof ServicesSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/api/public/mpesa/callback': typeof ApiPublicMpesaCallbackRoute
 }
@@ -307,7 +300,7 @@ export interface FileRoutesByTo {
   '/media': typeof MediaRoute
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/services': typeof ServicesRouteWithChildren
+  '/services': typeof ServicesRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/appointments': typeof AdminAppointmentsRoute
@@ -330,7 +323,6 @@ export interface FileRoutesByTo {
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/therapists': typeof AdminTherapistsRoute
   '/admin/users': typeof AdminUsersRoute
-  '/services/$slug': typeof ServicesSlugRoute
   '/admin': typeof AdminIndexRoute
   '/api/public/mpesa/callback': typeof ApiPublicMpesaCallbackRoute
 }
@@ -350,7 +342,7 @@ export interface FileRoutesById {
   '/media': typeof MediaRoute
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/services': typeof ServicesRouteWithChildren
+  '/services': typeof ServicesRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/appointments': typeof AdminAppointmentsRoute
@@ -373,7 +365,6 @@ export interface FileRoutesById {
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/therapists': typeof AdminTherapistsRoute
   '/admin/users': typeof AdminUsersRoute
-  '/services/$slug': typeof ServicesSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/api/public/mpesa/callback': typeof ApiPublicMpesaCallbackRoute
 }
@@ -417,7 +408,6 @@ export interface FileRouteTypes {
     | '/admin/testimonials'
     | '/admin/therapists'
     | '/admin/users'
-    | '/services/$slug'
     | '/admin/'
     | '/api/public/mpesa/callback'
   fileRoutesByTo: FileRoutesByTo
@@ -458,7 +448,6 @@ export interface FileRouteTypes {
     | '/admin/testimonials'
     | '/admin/therapists'
     | '/admin/users'
-    | '/services/$slug'
     | '/admin'
     | '/api/public/mpesa/callback'
   id:
@@ -500,7 +489,6 @@ export interface FileRouteTypes {
     | '/admin/testimonials'
     | '/admin/therapists'
     | '/admin/users'
-    | '/services/$slug'
     | '/admin/'
     | '/api/public/mpesa/callback'
   fileRoutesById: FileRoutesById
@@ -520,7 +508,7 @@ export interface RootRouteChildren {
   MediaRoute: typeof MediaRoute
   ProfileRoute: typeof ProfileRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
-  ServicesRoute: typeof ServicesRouteWithChildren
+  ServicesRoute: typeof ServicesRoute
   SignupRoute: typeof SignupRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiPublicMpesaCallbackRoute: typeof ApiPublicMpesaCallbackRoute
@@ -653,13 +641,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
-    }
-    '/services/$slug': {
-      id: '/services/$slug'
-      path: '/$slug'
-      fullPath: '/services/$slug'
-      preLoaderRoute: typeof ServicesSlugRouteImport
-      parentRoute: typeof ServicesRoute
     }
     '/admin/users': {
       id: '/admin/users'
@@ -861,18 +842,6 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
-interface ServicesRouteChildren {
-  ServicesSlugRoute: typeof ServicesSlugRoute
-}
-
-const ServicesRouteChildren: ServicesRouteChildren = {
-  ServicesSlugRoute: ServicesSlugRoute,
-}
-
-const ServicesRouteWithChildren = ServicesRoute._addFileChildren(
-  ServicesRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -888,7 +857,7 @@ const rootRouteChildren: RootRouteChildren = {
   MediaRoute: MediaRoute,
   ProfileRoute: ProfileRoute,
   ResetPasswordRoute: ResetPasswordRoute,
-  ServicesRoute: ServicesRouteWithChildren,
+  ServicesRoute: ServicesRoute,
   SignupRoute: SignupRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiPublicMpesaCallbackRoute: ApiPublicMpesaCallbackRoute,
