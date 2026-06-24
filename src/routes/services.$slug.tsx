@@ -1,500 +1,483 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site/SiteShell";
-import { ArrowRight, Clock, DollarSign, Users, CheckCircle } from "lucide-react";
-import therapySession from "@/assets/therapy-session.jpg";
-import individualIcon from "@/assets/icons/individual-therapy.svg";
-import familyIcon from "@/assets/icons/family-therapy.svg";
-import couplesIcon from "@/assets/icons/couples-therapy.svg";
-import groupIcon from "@/assets/icons/group-therapy.svg";
-import griefCampIcon from "@/assets/icons/grief-camp.svg";
-import corporateIcon from "@/assets/icons/corporate-speaking.svg";
+import {
+    HeartHandshake, Users, Baby, Briefcase, Brain, ArrowLeft, ArrowRight, Check,
+    Lock, ShieldCheck, UserRound, HeartPulse, Clock, Tag, CalendarDays, Calendar,
+} from "lucide-react";
+import type { ComponentType } from "react";
 
-export const Route = createFileRoute("/services/$slug")({
-    component: ServiceDetailPage,
-});
+// Using therapy-session.jpg as fallback for all service images
+import serviceImage from "@/assets/therapy-session.jpg";
+import glanceImg from "@/assets/therapy-session.jpg";
+import readingWellbeing from "@/assets/therapy-session.jpg";
+import readingMental from "@/assets/therapy-session.jpg";
+import readingGuide from "@/assets/therapy-session.jpg";
+import ctaImg from "@/assets/therapy-session.jpg";
 
-const servicesData = {
+type IconType = ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
+
+type Service = {
+    key: string;
+    eyebrow: string;
+    title: string;
+    titleItalic: string;
+    titleRest: string;
+    ctaLabel: string;
+    icon: IconType;
+    heroImage: string;
+    intro: string;
+    whoFor: string;
+    concerns: string[];
+    expect: string[];
+    benefits: string[];
+    features: { icon: IconType; title: string; body: string }[];
+    duration: string;
+    pricing: string;
+    mode: string;
+    availability: string;
+    booking: string;
+    reading: { category: string; title: string; image: string }[];
+};
+
+const DEFAULT_FEATURES = [
+    { icon: Lock, title: "Confidential & private", body: "Your story stays with us." },
+    { icon: ShieldCheck, title: "Evidence-based care", body: "Therapies proven to help." },
+    { icon: UserRound, title: "Tailored to you", body: "Your goals, your pace." },
+    { icon: HeartPulse, title: "Compassionate support", body: "You don't have to do this alone." },
+];
+
+const DEFAULT_READING = [
+    { category: "Wellbeing", title: "What to expect in your first therapy session", image: readingWellbeing },
+    { category: "Mental Health", title: "How therapy helps you heal and grow", image: readingMental },
+    { category: "Guide", title: "Starting therapy: A step-by-step guide", image: readingGuide },
+];
+
+const SERVICES: Record<string, Service> = {
     individual: {
-        slug: "individual",
-        icon: individualIcon,
+        key: "individual",
+        eyebrow: "Therapeutic Care",
         title: "Individual Therapy",
-        subtitle: "One-to-one care for your mental health journey",
-        description:
-            "Individual therapy provides a safe, confidential space to explore your thoughts, feelings, and experiences with a trained therapist. Whether you're dealing with anxiety, depression, trauma, life transitions, or simply seeking personal growth, we walk alongside you.",
+        titleItalic: "Individual",
+        titleRest: "Therapy",
+        ctaLabel: "Book an individual session",
+        icon: HeartHandshake,
+        heroImage: serviceImage,
+        intro: "A confidential space to slow down, reflect, and work through what you're carrying — with a therapist who truly listens and walks alongside you.",
+        whoFor: "Adults and adolescents navigating personal challenges, transitions, or emotional pain.",
+        concerns: ["Anxiety & Stress", "Depression & Low Mood", "Trauma & PTSD", "Self-Esteem", "Life Transitions", "Burnout", "Grief"],
+        expect: [
+            "A confidential first conversation to understand what brings you here.",
+            "Collaborative goal-setting at your own pace.",
+            "Evidence-based therapeutic approaches tailored to you.",
+            "Ongoing review of what is helping and adjustments as needed.",
+        ],
+        benefits: ["Better understanding of yourself", "Healthier relationships", "Emotional resilience", "Improved coping skills", "Greater clarity and purpose"],
+        features: DEFAULT_FEATURES,
         duration: "60 minutes",
-        price: "From KES 5,000",
-        format: "In-person or online",
-        image: therapySession,
-        whoItsFor: [
-            "Anyone experiencing anxiety, stress, or depression",
-            "Those navigating grief, loss, or life transitions",
-            "Individuals recovering from trauma",
-            "People seeking personal growth and self-understanding",
-        ],
-        whatToExpect: [
-            "Confidential, one-to-one sessions in a safe environment",
-            "Evidence-based therapeutic approaches tailored to you",
-            "Practical tools to manage emotions and build resilience",
-            "A collaborative, non-judgmental partnership",
-        ],
-        approach:
-            "We draw from systemic, narrative, and attachment-informed frameworks to meet you where you are. Sessions are client-led, compassionate, and focused on sustainable healing.",
-        faqs: [
-            {
-                question: "How long does therapy take?",
-                answer:
-                    "It varies. Some clients find relief in a few sessions, while others benefit from longer-term support. We'll review progress together and adjust as needed.",
-            },
-            {
-                question: "What if I don't know what to talk about?",
-                answer:
-                    "That's completely normal. Your therapist will guide the conversation and help you explore what matters most to you.",
-            },
-            {
-                question: "Is everything I say confidential?",
-                answer:
-                    "Yes. We uphold strict confidentiality unless there's a risk of harm to you or others, which we'd discuss with you first.",
-            },
-        ],
-    },
-    family: {
-        slug: "family",
-        icon: familyIcon,
-        title: "Family Therapy",
-        subtitle: "Strengthen bonds and resolve conflict together",
-        description:
-            "Family therapy helps families navigate conflict, improve communication, and rebuild trust. We work with the whole system — parents, children, extended family — to create healthier patterns and stronger connections.",
-        duration: "90 minutes",
-        price: "From KES 8,000",
-        format: "In-person or online",
-        image: therapySession,
-        whoItsFor: [
-            "Families experiencing conflict or tension",
-            "Parents and children navigating difficult transitions",
-            "Blended families adjusting to new dynamics",
-            "Families healing from loss or trauma",
-        ],
-        whatToExpect: [
-            "Sessions with the whole family or subsets as needed",
-            "A systemic approach that views the family as a unit",
-            "Tools to improve communication and resolve conflict",
-            "A safe space for everyone's voice to be heard",
-        ],
-        approach:
-            "We use a systemic, attachment-based lens to understand family patterns and create lasting change. Sessions are collaborative, respectful, and focused on the family's unique needs.",
-        faqs: [
-            {
-                question: "Does everyone need to attend?",
-                answer:
-                    "Not always. We'll discuss who should be present based on your family's needs and goals.",
-            },
-            {
-                question: "What if family members are resistant?",
-                answer:
-                    "Resistance is normal. We create a safe, non-judgmental space where everyone can participate at their own pace.",
-            },
-            {
-                question: "Can we have sessions with just part of the family?",
-                answer:
-                    "Yes. Sometimes working with subsets (parents, siblings, etc.) is the most effective approach.",
-            },
-        ],
+        pricing: "From KES 5,000",
+        mode: "In-person · Online",
+        availability: "Same-week",
+        booking: "Within 1 week",
+        reading: DEFAULT_READING,
     },
     couples: {
-        slug: "couples",
-        icon: couplesIcon,
+        key: "couples",
+        eyebrow: "Relational Care",
         title: "Couples Counselling",
-        subtitle: "Rebuild trust, intimacy, and partnership",
-        description:
-            "Couples counselling helps partners navigate conflict, rebuild trust, and deepen intimacy. Whether you're facing a crisis or simply want to strengthen your relationship, we create a space for honest, transformative conversations.",
+        titleItalic: "Couples",
+        titleRest: "Counselling",
+        ctaLabel: "Book a couples session",
+        icon: Users,
+        heroImage: serviceImage,
+        intro: "A structured, supportive space for partners to rebuild communication, repair trust, and make decisions together with clarity rather than reactivity.",
+        whoFor: "Partners at any stage — dating, engaged, married, separating — who want to understand and be understood.",
+        concerns: ["Communication", "Trust & Infidelity", "Intimacy", "Recurring Conflict", "Life Transitions", "Co-parenting"],
+        expect: [
+            "A joint intake to map what's working and what isn't.",
+            "Individual check-ins so both voices are heard.",
+            "Skill-building for hard conversations.",
+            "Clear agreements you can carry home.",
+        ],
+        benefits: ["Stronger communication", "Renewed trust", "Healthier conflict", "Shared decision-making", "Deeper intimacy"],
+        features: DEFAULT_FEATURES,
         duration: "75 minutes",
-        price: "From KES 7,500",
-        format: "In-person or online",
-        image: therapySession,
-        whoItsFor: [
-            "Couples experiencing conflict or disconnection",
-            "Partners navigating infidelity or trust issues",
-            "Couples preparing for marriage or major transitions",
-            "Relationships that feel stuck or stagnant",
+        pricing: "From KES 8,000",
+        mode: "In-person · Online",
+        availability: "Within 1 week",
+        booking: "Within 1 week",
+        reading: DEFAULT_READING,
+    },
+    family: {
+        key: "family",
+        eyebrow: "Systemic Care",
+        title: "Family Therapy",
+        titleItalic: "Family",
+        titleRest: "Therapy",
+        ctaLabel: "Book a family session",
+        icon: Users,
+        heroImage: serviceImage,
+        intro: "Therapy with the whole family system — gently rewriting the patterns, roles and stories that shape how you connect.",
+        whoFor: "Families navigating conflict, transitions, blended dynamics, illness, loss or relocation.",
+        concerns: ["Conflict", "Parent-Teen Tension", "Blended Families", "Grief & Loss", "Co-parenting", "Communication"],
+        expect: [
+            "An intake with parents or guardians first.",
+            "Sessions with the full family system.",
+            "Practical tools you can use at home.",
+            "Periodic reviews to mark progress together.",
         ],
-        whatToExpect: [
-            "Structured, guided conversations in a neutral space",
-            "Tools to improve communication and resolve conflict",
-            "Exploration of attachment patterns and relationship dynamics",
-            "Support for rebuilding trust and intimacy",
+        benefits: ["Healthier family patterns", "Stronger communication", "Calmer home dynamics", "Better repair after conflict", "Shared understanding"],
+        features: DEFAULT_FEATURES,
+        duration: "60 – 90 minutes",
+        pricing: "From KES 9,000",
+        mode: "In-person · Online",
+        availability: "Within 1 week",
+        booking: "Within 1 week",
+        reading: DEFAULT_READING,
+    },
+    children: {
+        key: "children",
+        eyebrow: "Young Minds",
+        title: "Children & Adolescents",
+        titleItalic: "Children",
+        titleRest: "& Adolescents",
+        ctaLabel: "Book a session for your child",
+        icon: Baby,
+        heroImage: serviceImage,
+        intro: "Therapy for children and teens that meets them where they are — through play, art, storytelling and conversation, with parents kept close.",
+        whoFor: "Children (5–12) and adolescents navigating emotional, behavioural or developmental concerns.",
+        concerns: ["Anxiety & Worry", "Big Feelings", "School Struggles", "Friendships", "Grief & Loss", "Self-Esteem"],
+        expect: [
+            "A parent / guardian consultation first.",
+            "Weekly sessions with your child or teen.",
+            "Regular parent feedback sessions.",
+            "A shared plan you can support at home.",
         ],
-        approach:
-            "We use emotionally focused therapy (EFT) and systemic approaches to help couples reconnect. Sessions are balanced, compassionate, and focused on the relationship — not blame.",
-        faqs: [
-            {
-                question: "What if we're not sure we want to stay together?",
-                answer:
-                    "That's okay. Therapy can help you gain clarity and make decisions that feel right for you both.",
-            },
-            {
-                question: "Will the therapist take sides?",
-                answer:
-                    "No. We remain neutral and focused on the relationship, not individual partners.",
-            },
-            {
-                question: "Can we save our relationship?",
-                answer:
-                    "Every relationship is different. Our goal is to help you explore possibilities and make informed decisions together.",
-            },
-        ],
+        benefits: ["Calmer emotional regulation", "Stronger self-esteem", "Better focus at school", "Healthier friendships", "A supported family"],
+        features: DEFAULT_FEATURES,
+        duration: "45 minutes",
+        pricing: "From KES 4,500",
+        mode: "In-person",
+        availability: "Same-week",
+        booking: "Within 1 week",
+        reading: DEFAULT_READING,
     },
     group: {
-        slug: "group",
-        icon: groupIcon,
+        key: "group",
+        eyebrow: "Group Care",
         title: "Group Therapy",
-        subtitle: "Healing through shared experience",
-        description:
-            "Group therapy offers a unique space to connect with others facing similar challenges. Led by a trained therapist, small groups provide support, perspective, and the powerful realization that you're not alone.",
-        duration: "90 minutes · 8 weeks",
-        price: "From KES 3,500 / session",
-        format: "In-person",
-        image: therapySession,
-        whoItsFor: [
-            "Individuals seeking community and shared experience",
-            "Those dealing with grief, anxiety, or life transitions",
-            "People who benefit from peer support and accountability",
-            "Anyone looking for a more affordable therapy option",
+        titleItalic: "Group",
+        titleRest: "Therapy",
+        ctaLabel: "Join a therapy group",
+        icon: Brain,
+        heroImage: serviceImage,
+        intro: "Themed therapeutic groups bring together people walking similar paths — in a small, closed circle with a trained facilitator.",
+        whoFor: "Adults ready to learn from — and with — others around shared themes.",
+        concerns: ["Grief & Loss", "Parenting", "Anxiety", "Divorce Recovery", "Personal Growth", "Burnout"],
+        expect: [
+            "A brief screening conversation first.",
+            "6 – 10 weekly sessions in a closed group.",
+            "A confidential, facilitated container.",
+            "Skills you take with you long after the group ends.",
         ],
-        whatToExpect: [
-            "Small groups (6-10 people) facilitated by a therapist",
-            "Confidential, structured sessions with clear guidelines",
-            "Shared stories, insights, and mutual support",
-            "Tools and practices to take into daily life",
-        ],
-        approach:
-            "Groups are designed around specific themes (grief, anxiety, relationships) and run for 8 weeks. We create a safe, inclusive space where everyone's voice matters.",
-        faqs: [
-            {
-                question: "What if I'm shy or don't like sharing?",
-                answer:
-                    "You can participate at your own pace. There's no pressure to share more than you're comfortable with.",
-            },
-            {
-                question: "How is group therapy different from individual therapy?",
-                answer:
-                    "Group therapy offers peer support and shared learning, while individual therapy is one-to-one. Both are valuable.",
-            },
-            {
-                question: "Can I join a group at any time?",
-                answer:
-                    "Most groups are closed (fixed members for 8 weeks). We'll let you know when the next cohort starts.",
-            },
-        ],
-    },
-    grief: {
-        slug: "grief",
-        icon: griefCampIcon,
-        title: "Grief Camp",
-        subtitle: "Therapy for children and teens through play and connection",
-        description:
-            "Grief Camp is a specialized program for children and teens who have experienced loss. Through play, art, storytelling, and conversation, young people find safe ways to express grief and connect with peers who understand.",
-        duration: "45 minutes",
-        price: "From KES 4,500",
-        format: "In-person",
-        image: therapySession,
-        whoItsFor: [
-            "Children and teens who have lost a loved one",
-            "Young people experiencing grief or significant loss",
-            "Families navigating loss together",
-            "Schools seeking grief support for students",
-        ],
-        whatToExpect: [
-            "Age-appropriate sessions using play, art, and conversation",
-            "A safe, non-judgmental space to express feelings",
-            "Peer support from others who've experienced loss",
-            "Tools to help young people understand and process grief",
-        ],
-        approach:
-            "We use play therapy, narrative therapy, and expressive arts to help children and teens process loss. Sessions are developmentally appropriate and trauma-informed.",
-        faqs: [
-            {
-                question: "How do I know if my child needs Grief Camp?",
-                answer:
-                    "If your child has experienced loss and is struggling with emotions, behavior, or school, Grief Camp can help.",
-            },
-            {
-                question: "Can parents attend?",
-                answer:
-                    "We offer parent sessions alongside child sessions to support the whole family.",
-            },
-            {
-                question: "What age range is Grief Camp for?",
-                answer:
-                    "We work with children ages 5-17, grouped by age and developmental stage.",
-            },
-        ],
+        benefits: ["Shared perspective", "Lasting friendships", "Practical skills", "A sense of belonging", "Hope from others' stories"],
+        features: DEFAULT_FEATURES,
+        duration: "90 minutes weekly",
+        pricing: "From KES 3,500 / session",
+        mode: "In-person · Online",
+        availability: "Cohorts quarterly",
+        booking: "Next cohort soon",
+        reading: DEFAULT_READING,
     },
     corporate: {
-        slug: "corporate",
-        icon: corporateIcon,
+        key: "corporate",
+        eyebrow: "Workplace Wellness",
         title: "Corporate Wellness",
-        subtitle: "Workplace mental health and wellbeing programs",
-        description:
-            "Corporate wellness programs help organizations build healthier, more resilient teams. From mental health workshops to leadership training and bespoke wellbeing programs, we bring clinical expertise to your workplace.",
-        duration: "60–180 minutes",
-        price: "On request",
-        format: "In-person or online",
-        image: therapySession,
-        whoItsFor: [
-            "Organizations prioritizing employee mental health",
-            "Teams experiencing high stress or burnout",
-            "Leadership seeking to build emotional intelligence",
-            "HR departments looking for wellness programs",
+        titleItalic: "Corporate",
+        titleRest: "Wellness",
+        ctaLabel: "Talk to our corporate team",
+        icon: Briefcase,
+        heroImage: serviceImage,
+        intro: "We partner with organisations to build psychologically safe, high-performing teams — through EAPs, workshops, manager debriefs and crisis response.",
+        whoFor: "HR & People teams, leaders and organisations committed to mental health at work.",
+        concerns: ["Employee Assistance", "Manager Training", "Team Debriefs", "Workshops", "Crisis Response", "Wellness Strategy"],
+        expect: [
+            "A scoping conversation with your team.",
+            "A tailored proposal and program plan.",
+            "Delivery on-site, hybrid or online.",
+            "Quarterly impact reporting.",
         ],
-        whatToExpect: [
-            "Workshops on stress, burnout, communication, and resilience",
-            "Keynote talks and panel discussions",
-            "Bespoke programs tailored to your organization",
-            "Ongoing consultation and support",
-        ],
-        approach:
-            "We design programs based on your organization's needs. All content is evidence-based, practical, and delivered by experienced therapists.",
-        faqs: [
-            {
-                question: "What topics do you cover?",
-                answer:
-                    "Common topics include stress management, burnout prevention, communication, grief in the workplace, and leadership wellbeing.",
-            },
-            {
-                question: "Can you work with remote teams?",
-                answer:
-                    "Yes. We offer online workshops and programs designed for distributed teams.",
-            },
-            {
-                question: "How do we get started?",
-                answer:
-                    "Contact us to discuss your organization's needs. We'll design a proposal tailored to you.",
-            },
-        ],
+        benefits: ["Healthier teams", "Lower burnout", "Stronger leadership", "Better retention", "A culture of safety"],
+        features: DEFAULT_FEATURES,
+        duration: "Custom engagements",
+        pricing: "On request",
+        mode: "On-site · Hybrid · Online",
+        availability: "Reach out anytime",
+        booking: "Within 1 week",
+        reading: DEFAULT_READING,
     },
 };
 
-function ServiceDetailPage() {
-    const { slug } = Route.useParams();
-    const service = servicesData[slug as keyof typeof servicesData];
+export const Route = createFileRoute("/services/$slug")({
+    head: ({ params }) => {
+        const s = SERVICES[params.slug];
+        return {
+            meta: s
+                ? [
+                    { title: `${s.title} | Recro Group` },
+                    { name: "description", content: s.intro.slice(0, 155) },
+                    { property: "og:title", content: `${s.title} | Recro Group` },
+                    { property: "og:description", content: s.intro.slice(0, 155) },
+                ]
+                : [{ title: "Service | Recro Group" }],
+        };
+    },
+    loader: ({ params }) => {
+        if (!SERVICES[params.slug]) throw notFound();
+        return { slug: params.slug };
+    },
+    component: ServiceDetailPage,
+    notFoundComponent: () => (
+        <SiteShell>
+            <div className="container-page py-24 text-center">
+                <h1 className="text-3xl font-serif text-primary-deep">Service not found</h1>
+                <Link to="/services" preload="intent" className="btn-primary mt-6 inline-flex">Back to services</Link>
+            </div>
+        </SiteShell>
+    ),
+    errorComponent: ({ error }) => (
+        <SiteShell>
+            <div className="container-page py-24 text-center">
+                <h1 className="text-2xl font-serif text-primary-deep">Something went wrong</h1>
+                <p className="mt-3 text-sm text-muted-foreground">{error.message}</p>
+            </div>
+        </SiteShell>
+    ),
+});
 
-    if (!service) {
-        return (
-            <SiteShell>
-                <div className="container-page py-20 text-center">
-                    <h1 className="text-4xl font-serif mb-4">Service not found</h1>
-                    <Link to="/services" preload="intent" className="text-primary-deep hover:underline">
-                        View all services
-                    </Link>
-                </div>
-            </SiteShell>
-        );
-    }
+function ServiceDetailPage() {
+    const { slug } = Route.useLoaderData() as { slug: string };
+    const service = SERVICES[slug];
 
     return (
         <SiteShell>
-            {/* HERO */}
-            <section className="relative bg-surface overflow-hidden">
-                <div className="absolute inset-0">
-                    <img
-                        src={service.image}
-                        alt={service.title}
-                        className="absolute right-0 top-0 h-full w-full md:w-[65%] lg:w-[55%] object-cover"
-                        fetchPriority="high"
-                        width={1920}
-                        height={1080}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-surface via-surface/95 to-transparent"></div>
-                </div>
+            {/* ───────── HERO ───────── */}
+            <section className="bg-surface">
+                <div className="container-page pt-10 lg:pt-14 pb-16 lg:pb-24">
+                    <Link
+                        to="/services"
+                        preload="intent"
+                        className="inline-flex items-center gap-2 text-sm text-primary-deep/70 hover:text-primary-deep transition-colors"
+                    >
+                        <ArrowLeft size={16} /> All services
+                    </Link>
 
-                <div className="relative z-10">
-                    <div className="container-page py-12 md:py-16 lg:py-20">
-                        <div className="max-w-xl lg:max-w-2xl">
-                            <Link
-                                to="/services"
-                                preload="intent"
-                                className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary-deep transition mb-6"
-                            >
-                                ← Back to services
-                            </Link>
-                            <div className="h-16 w-16 rounded-2xl bg-primary-soft flex items-center justify-center mb-6">
-                                <img src={service.icon} alt={service.title} className="h-9 w-9" loading="lazy" width={64} height={64} />
-                            </div>
-                            <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif tracking-tight leading-[1.05]">
-                                {service.title}
-                            </h1>
-                            <p className="mt-6 text-xl text-muted-foreground leading-relaxed">
-                                {service.subtitle}
+                    <div className="mt-8 grid lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+                        {/* LEFT — copy */}
+                        <div className="lg:col-span-5 pt-4 lg:pt-10">
+                            <p className="text-[10px] font-semibold tracking-[0.35em] uppercase text-primary-deep/60 mb-6">
+                                {service.eyebrow}
                             </p>
-                            <div className="mt-8 flex flex-wrap gap-3">
-                                <Link
-                                    to="/booking"
-                                    search={{ service: service.slug }}
-                                    preload="intent"
-                                    className="btn-primary inline-flex items-center gap-2"
-                                >
-                                    Book this service <ArrowRight size={16} />
+                            <h1 className="font-serif text-primary-deep leading-[0.95] tracking-tight text-5xl md:text-6xl lg:text-7xl">
+                                {service.titleItalic}
+                                <span className="block">{service.titleRest}</span>
+                            </h1>
+                            <p className="mt-8 text-base md:text-lg text-foreground/75 leading-relaxed max-w-md">
+                                {service.intro}
+                            </p>
+                            <div className="mt-10 flex flex-wrap gap-3">
+                                <Link to="/booking" search={{ service: service.key }} preload="intent" className="btn-primary rounded-full px-7">
+                                    {service.ctaLabel}
                                 </Link>
-                                <Link to="/contact" preload="intent" className="btn-secondary">
+                                <Link to="/contact" preload="intent" className="btn-secondary rounded-full px-7">
                                     Ask a question
                                 </Link>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </section>
 
-            {/* OVERVIEW */}
-            <section className="bg-background py-16 lg:py-20">
-                <div className="container-page">
-                    <div className="grid lg:grid-cols-3 gap-12">
-                        <div className="lg:col-span-2">
-                            <h2 className="text-3xl font-serif mb-6">About this service</h2>
-                            <p className="text-lg text-muted-foreground leading-relaxed">
-                                {service.description}
-                            </p>
-                        </div>
-                        <div className="lg:col-span-1">
-                            <div className="rounded-2xl border border-border bg-card p-6 space-y-5 sticky top-20">
-                                <div className="flex items-start gap-3">
-                                    <Clock size={20} className="text-primary-deep shrink-0 mt-0.5" />
-                                    <div>
-                                        <p className="text-sm font-semibold mb-1">Duration</p>
-                                        <p className="text-sm text-muted-foreground">{service.duration}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3">
-                                    <DollarSign size={20} className="text-primary-deep shrink-0 mt-0.5" />
-                                    <div>
-                                        <p className="text-sm font-semibold mb-1">Investment</p>
-                                        <p className="text-sm text-muted-foreground">{service.price}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3">
-                                    <Users size={20} className="text-primary-deep shrink-0 mt-0.5" />
-                                    <div>
-                                        <p className="text-sm font-semibold mb-1">Format</p>
-                                        <p className="text-sm text-muted-foreground">{service.format}</p>
-                                    </div>
-                                </div>
-                                <div className="pt-4 border-t border-border">
-                                    <Link
-                                        to="/booking"
-                                        search={{ service: service.slug }}
-                                        preload="intent"
-                                        className="w-full btn-primary justify-center"
-                                    >
-                                        Book now
-                                    </Link>
-                                </div>
+                        {/* RIGHT — image + floating features card */}
+                        <div className="lg:col-span-7 relative">
+                            <div className="aspect-[5/4] rounded-3xl overflow-hidden bg-primary-soft/40 shadow-[var(--shadow-lift)]">
+                                <img
+                                    src={service.heroImage}
+                                    alt={service.title}
+                                    width={1024}
+                                    height={1024}
+                                    fetchpriority="high"
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+
+                            {/* features card */}
+                            <div className="lg:absolute lg:-bottom-10 lg:-right-4 lg:max-w-[320px] mt-6 lg:mt-0 bg-card/95 backdrop-blur-sm rounded-2xl shadow-[var(--shadow-lift)] border border-border p-6 lg:p-7">
+                                <ul className="space-y-5">
+                                    {service.features.map((f) => {
+                                        const FIcon = f.icon;
+                                        return (
+                                            <li key={f.title} className="flex gap-4">
+                                                <span className="shrink-0 h-9 w-9 rounded-xl bg-primary-soft grid place-items-center text-primary-deep">
+                                                    <FIcon size={18} strokeWidth={1.6} />
+                                                </span>
+                                                <div className="min-w-0">
+                                                    <p className="text-sm font-semibold text-primary-deep leading-tight">{f.title}</p>
+                                                    <p className="mt-1 text-xs text-muted-foreground leading-snug">{f.body}</p>
+                                                </div>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* WHO IT'S FOR */}
-            <section className="bg-muted/30 py-16 lg:py-20">
-                <div className="container-page">
-                    <div className="max-w-3xl mx-auto">
-                        <h2 className="text-3xl font-serif mb-8 text-center">Who this is for</h2>
-                        <div className="grid sm:grid-cols-2 gap-4">
-                            {service.whoItsFor.map((item, index) => (
-                                <div
-                                    key={index}
-                                    className="flex items-start gap-3 rounded-xl bg-card border border-border p-5"
+            {/* ───────── WHO / WHAT TO EXPECT ───────── */}
+            <section className="container-page py-20 lg:py-28">
+                <div className="grid lg:grid-cols-2 gap-14 lg:gap-20">
+                    {/* Who & focus */}
+                    <div>
+                        <h2 className="font-serif text-3xl md:text-4xl text-primary-deep">Who this helps</h2>
+                        <p className="mt-5 text-foreground/75 leading-relaxed max-w-md">
+                            {service.whoFor}
+                        </p>
+                        <div className="mt-8 h-px w-16 bg-border" />
+
+                        <h3 className="mt-12 font-serif text-2xl md:text-3xl text-primary-deep">Focus areas</h3>
+                        <div className="mt-6 flex flex-wrap gap-2.5">
+                            {service.concerns.map((c) => (
+                                <span
+                                    key={c}
+                                    className="px-4 py-2 rounded-full bg-primary-soft/60 text-xs text-primary-deep border border-transparent hover:border-primary-deep/20 transition-colors"
                                 >
-                                    <CheckCircle size={20} className="text-primary-deep shrink-0 mt-0.5" />
-                                    <p className="text-sm leading-relaxed">{item}</p>
-                                </div>
+                                    {c}
+                                </span>
                             ))}
                         </div>
                     </div>
-                </div>
-            </section>
 
-            {/* WHAT TO EXPECT */}
-            <section className="bg-background py-16 lg:py-20">
-                <div className="container-page">
-                    <div className="max-w-3xl mx-auto">
-                        <h2 className="text-3xl font-serif mb-8 text-center">What to expect</h2>
-                        <div className="space-y-4">
-                            {service.whatToExpect.map((item, index) => (
-                                <div
-                                    key={index}
-                                    className="flex items-start gap-3 rounded-xl bg-muted/30 border border-border p-5"
-                                >
-                                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary-deep text-sm font-semibold">
-                                        {index + 1}
+                    {/* What to expect */}
+                    <div>
+                        <h2 className="font-serif text-3xl md:text-4xl text-primary-deep">What to expect</h2>
+                        <ol className="mt-8 space-y-7">
+                            {service.expect.map((step, i) => (
+                                <li key={step} className="flex gap-6 items-start">
+                                    <span className="font-serif italic text-3xl md:text-4xl text-primary-deep/30 leading-none shrink-0 w-12">
+                                        {String(i + 1).padStart(2, "0")}
                                     </span>
-                                    <p className="text-sm leading-relaxed">{item}</p>
-                                </div>
+                                    <p className="text-foreground/80 leading-relaxed pt-1.5 max-w-md">{step}</p>
+                                </li>
+                            ))}
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            {/* ───────── AT A GLANCE (band) ───────── */}
+            <section className="bg-primary-soft/50">
+                <div className="container-page py-16 lg:py-20">
+                    <div className="grid lg:grid-cols-12 gap-10 items-center">
+                        <div className="lg:col-span-8">
+                            <h2 className="font-serif text-3xl md:text-4xl text-primary-deep">At a glance</h2>
+                            <dl className="mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                                {[
+                                    { icon: Clock, k: "Duration", v: service.duration },
+                                    { icon: Tag, k: "Pricing", v: service.pricing },
+                                    { icon: UserRound, k: "Mode", v: service.mode },
+                                    { icon: CalendarDays, k: "Availability", v: service.availability },
+                                    { icon: Calendar, k: "Booking", v: service.booking },
+                                ].map(({ icon: GIcon, k, v }) => (
+                                    <div key={k}>
+                                        <GIcon size={22} strokeWidth={1.5} className="text-primary-deep/70" />
+                                        <dt className="mt-3 text-xs text-muted-foreground">{k}</dt>
+                                        <dd className="mt-1 text-sm font-semibold text-primary-deep">{v}</dd>
+                                    </div>
+                                ))}
+                            </dl>
+                        </div>
+                        <div className="lg:col-span-4">
+                            <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-[var(--shadow-lift)]">
+                                <img src={glanceImg} alt="A calm therapy space" width={1024} height={1024} loading="lazy" className="w-full h-full object-cover" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* ───────── BENEFITS + RELATED READING ───────── */}
+            <section className="container-page py-20 lg:py-28">
+                <div className="grid lg:grid-cols-12 gap-10 lg:gap-14">
+                    {/* Benefits card */}
+                    <div className="lg:col-span-4">
+                        <div className="bg-surface rounded-2xl p-8 lg:p-10 border border-border h-full">
+                            <h3 className="font-serif text-2xl md:text-3xl text-primary-deep">Benefits of therapy</h3>
+                            <ul className="mt-8 space-y-4">
+                                {service.benefits.map((b) => (
+                                    <li key={b} className="flex items-start gap-3">
+                                        <span className="mt-0.5 h-5 w-5 rounded-full bg-primary-soft grid place-items-center text-primary-deep shrink-0">
+                                            <Check size={12} strokeWidth={2.5} />
+                                        </span>
+                                        <span className="text-sm text-foreground/80">{b}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+
+                    {/* Related reading */}
+                    <div className="lg:col-span-8">
+                        <h3 className="font-serif text-2xl md:text-3xl text-primary-deep">Related reading &amp; resources</h3>
+                        <div className="mt-8 grid md:grid-cols-3 gap-6">
+                            {service.reading.map((r) => (
+                                <Link key={r.title} to="/blog" preload="intent" className="group block rounded-2xl overflow-hidden bg-card border border-border hover:shadow-[var(--shadow-lift)] transition-all">
+                                    <div className="aspect-[4/3] overflow-hidden">
+                                        <img src={r.image} alt={r.title} width={1024} height={1024} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                    </div>
+                                    <div className="p-5">
+                                        <p className="text-[10px] font-semibold tracking-[0.25em] uppercase text-primary-deep/60">
+                                            {r.category}
+                                        </p>
+                                        <h4 className="mt-2 font-serif text-lg text-primary-deep leading-snug">{r.title}</h4>
+                                        <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-primary-deep group-hover:gap-2.5 transition-all">
+                                            Read more <ArrowRight size={12} />
+                                        </span>
+                                    </div>
+                                </Link>
                             ))}
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* APPROACH */}
-            <section className="bg-muted/30 py-16 lg:py-20">
-                <div className="container-page">
-                    <div className="max-w-3xl mx-auto">
-                        <h2 className="text-3xl font-serif mb-6 text-center">Our approach</h2>
-                        <p className="text-lg text-muted-foreground leading-relaxed text-center">
-                            {service.approach}
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            {/* FAQs */}
-            <section className="bg-background py-16 lg:py-20">
-                <div className="container-page">
-                    <div className="max-w-3xl mx-auto">
-                        <h2 className="text-3xl font-serif mb-8 text-center">
-                            Frequently asked questions
-                        </h2>
-                        <div className="space-y-6">
-                            {service.faqs.map((faq, index) => (
-                                <div
-                                    key={index}
-                                    className="rounded-2xl border border-border bg-card p-6"
-                                >
-                                    <h3 className="text-lg font-semibold mb-3">{faq.question}</h3>
-                                    <p className="text-sm text-muted-foreground leading-relaxed">
-                                        {faq.answer}
-                                    </p>
-                                </div>
-                            ))}
+            {/* ───────── FINAL CTA BANNER ───────── */}
+            <section className="container-page pb-24">
+                <div className="relative rounded-3xl overflow-hidden bg-primary-soft/60 px-6 py-16 lg:py-20">
+                    <img
+                        src={ctaImg}
+                        alt=""
+                        aria-hidden
+                        className="absolute inset-0 w-full h-full object-cover opacity-30"
+                        loading="lazy"
+                        width={1920}
+                        height={1080}
+                    />
+                    <div className="relative text-center max-w-xl mx-auto">
+                        <div className="mx-auto h-10 w-10 rounded-full bg-card grid place-items-center shadow-sm">
+                            <HeartHandshake size={20} strokeWidth={1.5} className="text-primary-deep" />
                         </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* CTA */}
-            <section className="bg-background pb-20">
-                <div className="container-page">
-                    <div className="rounded-3xl border border-border bg-muted/30 p-8 md:p-12 text-center">
-                        <h2 className="text-3xl md:text-4xl font-serif text-primary-deep mb-4">
-                            Ready to get started?
+                        <h2 className="mt-6 font-serif text-3xl md:text-4xl text-primary-deep">
+                            Ready to begin the conversation?
                         </h2>
-                        <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
-                            Book your first session or reach out with any questions. We're here to
-                            help.
+                        <p className="mt-4 text-foreground/75">
+                            Taking the first step is often the hardest. We're here whenever you're ready.
                         </p>
-                        <div className="flex flex-wrap items-center justify-center gap-4">
-                            <Link
-                                to="/booking"
-                                search={{ service: service.slug }}
-                                preload="intent"
-                                className="btn-primary"
-                            >
-                                Book this service
-                            </Link>
-                            <Link to="/contact" preload="intent" className="btn-secondary">
-                                Contact us
-                            </Link>
-                        </div>
+                        <Link
+                            to="/booking"
+                            search={{ service: service.key }}
+                            preload="intent"
+                            className="btn-primary mt-8 inline-flex rounded-full px-8"
+                        >
+                            {service.ctaLabel}
+                        </Link>
                     </div>
                 </div>
             </section>
