@@ -24,6 +24,15 @@ type AuthState = {
 
 const AuthContext = createContext<AuthState | undefined>(undefined);
 
+// Helper function to generate UUID v4
+function generateUUID(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<DummyUser | null>(null);
   const [loading, setLoading] = useState(true);
@@ -32,14 +41,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Check if user is logged in from localStorage
     const storedUser = localStorage.getItem('demoUser');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        const parsedUser = JSON.parse(storedUser);
+
+        // Check if the ID is a valid UUID format
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+        if (!uuidRegex.test(parsedUser.id)) {
+          // Old format detected, regenerate with proper UUID
+          console.warn('Old user ID format detected, regenerating with UUID');
+          parsedUser.id = generateUUID();
+          localStorage.setItem('demoUser', JSON.stringify(parsedUser));
+        }
+
+        setUser(parsedUser);
+      } catch (e) {
+        console.error('Failed to parse stored user', e);
+        localStorage.removeItem('demoUser');
+      }
     }
     setLoading(false);
   }, []);
 
   const signIn = (email: string, name?: string) => {
     const newUser: DummyUser = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: generateUUID(),
       email,
       user_metadata: {
         full_name: name || email.split('@')[0],
