@@ -8,7 +8,7 @@ export function SiteFooter() {
       <div className="container-page py-16 grid gap-12 md:grid-cols-4">
         <div className="md:col-span-1">
           <div className="flex items-center gap-3">
-            <img src={logoIcon} alt="Recro Group Logo" className="h-11 w-11 object-contain" />
+            <img src={logoIcon} alt="Recro Group Logo" className="h-11 w-11 object-contain" loading="lazy" width={44} height={44} />
             <span className="flex flex-col leading-none">
               <span className="text-xl font-bold tracking-tight">Recro Group</span>
               <span className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground mt-0.5">Restoring families</span>
@@ -22,20 +22,20 @@ export function SiteFooter() {
         <div>
           <h4 className="text-sm font-semibold text-foreground">Explore</h4>
           <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
-            <li><Link to="/about" className="hover:text-primary-deep">About us</Link></li>
-            <li><Link to="/services" className="hover:text-primary-deep">Services</Link></li>
-            <li><Link to="/grief-camp" className="hover:text-primary-deep">Grief Camp</Link></li>
-            <li><Link to="/insights" className="hover:text-primary-deep">Insights</Link></li>
+            <li><Link to="/about" preload="intent" className="hover:text-primary-deep">About us</Link></li>
+            <li><Link to="/services" preload="intent" className="hover:text-primary-deep">Services</Link></li>
+            <li><Link to="/grief-camp" preload="intent" className="hover:text-primary-deep">Grief Camp</Link></li>
+            <li><Link to="/insights" preload="intent" className="hover:text-primary-deep">Insights</Link></li>
           </ul>
         </div>
 
         <div>
           <h4 className="text-sm font-semibold text-foreground">Engage</h4>
           <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
-            <li><Link to="/booking" search={{ service: undefined }} className="hover:text-primary-deep">Book a Session</Link></li>
-            <li><Link to="/contact" className="hover:text-primary-deep">Contact us</Link></li>
-            <li><Link to="/faq" className="hover:text-primary-deep">FAQs</Link></li>
-            <li><Link to="/join-us" className="hover:text-primary-deep">Join us</Link></li>
+            <li><Link to="/booking" search={{ service: undefined }} preload="intent" className="hover:text-primary-deep">Book a Session</Link></li>
+            <li><Link to="/contact" preload="intent" className="hover:text-primary-deep">Contact us</Link></li>
+            <li><Link to="/faq" preload="intent" className="hover:text-primary-deep">FAQs</Link></li>
+            <li><Link to="/join-us" preload="intent" className="hover:text-primary-deep">Join us</Link></li>
           </ul>
         </div>
 

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, User, LogOut, LayoutDashboard, Calendar, CreditCard, Settings, FileText, Inbox } from "lucide-react";
+import { Menu, X, User, LogOut, LayoutDashboard } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import logoIcon from "@/assets/icons/logo_icon.png";
 import {
@@ -42,8 +42,8 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="container-page flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-3">
-          <img src={logoIcon} alt="Recro Group Logo" className="h-11 w-11 object-contain" />
+        <Link to="/" className="flex items-center gap-3" preload="intent">
+          <img src={logoIcon} alt="Recro Group Logo" className="h-11 w-11 object-contain" loading="lazy" width={44} height={44} />
           <span className="flex flex-col leading-none">
             <span className="text-xl font-bold tracking-tight text-foreground">Recro Group</span>
             <span className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground mt-0.5">Restoring families</span>
@@ -66,32 +66,34 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-2">
           {!user ? (
-            <Link to="/join-us" className="hidden sm:inline-flex btn-primary">Join Us</Link>
+            <Link to="/join-us" preload="intent" className="hidden sm:inline-flex btn-primary">Join Us</Link>
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger className="grid h-10 w-10 place-items-center rounded-full bg-primary-soft text-primary-deep text-sm font-semibold border border-border hover:bg-primary/15 transition" aria-label="Account menu">
                 {initials(user.user_metadata?.full_name, user.email)}
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-60">
+              <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="flex flex-col gap-0.5">
                   <span className="text-sm font-semibold truncate">{user.user_metadata?.full_name || user.email}</span>
                   <span className="text-[11px] font-normal text-muted-foreground truncate">{user.email}</span>
-                  <span className="mt-1 inline-flex w-fit text-[10px] uppercase tracking-wider bg-primary-soft text-primary-deep px-1.5 py-0.5 rounded">Full Access</span>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild><Link to="/admin"><LayoutDashboard className="mr-2 h-4 w-4" />Admin Dashboard</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/admin/bookings"><Inbox className="mr-2 h-4 w-4" />Manage Bookings</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/admin/payments"><CreditCard className="mr-2 h-4 w-4" />Manage Payments</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/admin/blog"><FileText className="mr-2 h-4 w-4" />Content</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild className="focus:bg-primary-soft focus:text-primary-deep">
+                  <Link to="/admin" preload="intent">
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    Admin Dashboard
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="focus:bg-primary-soft focus:text-primary-deep">
+                  <Link to="/profile" preload="intent">
+                    <User className="mr-2 h-4 w-4" />
+                    My Profile
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild><Link to="/profile"><User className="mr-2 h-4 w-4" />My Profile</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/profile" search={{ tab: "appointments" } as any}><Calendar className="mr-2 h-4 w-4" />My Appointments</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/profile" search={{ tab: "bookings" } as any}><Inbox className="mr-2 h-4 w-4" />My Bookings</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/profile" search={{ tab: "payments" } as any}><CreditCard className="mr-2 h-4 w-4" />My Payments</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/profile" search={{ tab: "settings" } as any}><Settings className="mr-2 h-4 w-4" />Settings</Link></DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:text-destructive">
-                  <LogOut className="mr-2 h-4 w-4" />Sign out
+                <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:text-destructive focus:bg-destructive/10">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -113,6 +115,7 @@ export function SiteHeader() {
               <Link
                 key={n.to}
                 to={n.to}
+                preload="intent"
                 onClick={() => setOpen(false)}
                 className="px-3 py-2.5 rounded-xl text-sm font-medium text-foreground hover:bg-primary-soft"
               >
@@ -120,7 +123,7 @@ export function SiteHeader() {
               </Link>
             ))}
             {!user && (
-              <Link to="/join-us" onClick={() => setOpen(false)} className="btn-primary mt-2">Join Us</Link>
+              <Link to="/join-us" preload="intent" onClick={() => setOpen(false)} className="btn-primary mt-2">Join Us</Link>
             )}
           </div>
         </div>

@@ -1,9 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   HeartHandshake,
-  Users,
-  Baby,
-  Briefcase,
   Sparkles,
   ArrowRight,
   ShieldCheck,
@@ -112,6 +109,9 @@ function HomeVideoCard({ video }: { video: { title: string; desc: string; durati
               src={video.thumbnail}
               alt={video.title}
               className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+              width={1280}
+              height={720}
             />
             <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
             <button
@@ -162,6 +162,9 @@ function HomePage() {
           src={heroFamily}
           alt="A diverse family sitting together in a bright sunlit therapy room"
           className="absolute inset-0 h-full w-full object-cover"
+          fetchPriority="high"
+          width={1920}
+          height={1080}
         />
 
         {/* Dark gradient overlay for text visibility - stronger on the left */}
@@ -182,7 +185,7 @@ function HomePage() {
                 <a href="/booking" className="btn-primary">
                   Book a session <ArrowRight size={16} />
                 </a>
-                <Link to="/services" className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border border-white/40 text-white px-6 py-2.5 rounded-xl font-semibold transition inline-flex items-center gap-2">
+                <Link to="/services" preload="intent" className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border border-white/40 text-white px-6 py-2.5 rounded-xl font-semibold transition inline-flex items-center gap-2">
                   Explore services
                 </Link>
               </div>
@@ -217,7 +220,7 @@ function HomePage() {
               leading a team — there's a Recro service for that.
             </p>
           </div>
-          <Link to="/services" className="text-sm font-semibold text-primary-deep inline-flex items-center gap-1.5 hover:gap-2.5 transition-all">
+          <Link to="/services" preload="intent" className="text-sm font-semibold text-primary-deep inline-flex items-center gap-1.5 hover:gap-2.5 transition-all">
             All services <ArrowRight size={14} />
           </Link>
         </div>
@@ -237,6 +240,7 @@ function HomePage() {
                 <Link
                   to="/services/$slug"
                   params={{ slug: s.serviceKey }}
+                  preload="intent"
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-deep group-hover:gap-2.5 transition-all"
                 >
                   Learn more <ArrowRight size={13} />
@@ -245,6 +249,7 @@ function HomePage() {
                 <Link
                   to="/booking"
                   search={{ service: s.serviceKey }}
+                  preload="intent"
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-deep group-hover:gap-2.5 transition-all"
                 >
                   Book this <ArrowRight size={13} />
@@ -331,10 +336,10 @@ function HomePage() {
                 Designed and led by licensed clinicians.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link to="/grief-camp" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white text-[#3F5B43] font-semibold text-sm hover:bg-white/90 transition">
+                <Link to="/grief-camp" preload="intent" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white text-[#3F5B43] font-semibold text-sm hover:bg-white/90 transition">
                   Apply for Grief Camp
                 </Link>
-                <Link to="/grief-camp" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border-2 border-white/30 text-white font-semibold text-sm hover:border-white/50 transition">
+                <Link to="/grief-camp" preload="intent" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border-2 border-white/30 text-white font-semibold text-sm hover:border-white/50 transition">
                   Sponsor a Child
                 </Link>
               </div>
@@ -344,8 +349,8 @@ function HomePage() {
                 src={griefCamp}
                 alt="Children in a therapeutic camp setting"
                 loading="lazy"
-                width={1600}
-                height={900}
+                width={1920}
+                height={1080}
                 className="absolute inset-0 h-full w-full object-cover"
               />
             </div>
@@ -491,6 +496,7 @@ function HomePage() {
             </div>
             <Link
               to="/media"
+              preload="intent"
               className="text-xs font-semibold tracking-[0.2em] uppercase text-accent inline-flex items-center gap-2 hover:gap-3 transition-all"
             >
               View media library <ArrowRight size={14} />
@@ -541,6 +547,7 @@ function HomePage() {
             </div>
             <Link
               to="/blog"
+              preload="intent"
               className="text-xs font-semibold tracking-[0.2em] uppercase text-primary-deep inline-flex items-center gap-2 hover:gap-3 transition-all"
             >
               All blogs <ArrowRight size={14} />
@@ -571,6 +578,7 @@ function HomePage() {
               <Link
                 key={b.title}
                 to="/blog"
+                preload="intent"
                 className="group card-lift block rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)]"
               >
                 <span className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground">
@@ -604,7 +612,7 @@ function HomePage() {
               <a href="/booking" className="btn-primary">
                 Book a Session
               </a>
-              <Link to="/contact" className="btn-secondary">
+              <Link to="/contact" preload="intent" className="btn-secondary">
                 Contact Recro
               </Link>
             </div>

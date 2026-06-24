@@ -4,16 +4,17 @@ import { Button } from "@/components/ui/button";
 import drKarume from "@/assets/founder-portrait.jpg";
 import ctaLeft from "@/assets/journey-camp.jpg";
 import ctaRight from "@/assets/journey-connection.jpg";
+import individualIcon from "@/assets/icons/individual-therapy.svg";
+import couplesIcon from "@/assets/icons/couples-therapy.svg";
+import familyIcon from "@/assets/icons/family-therapy.svg";
+import groupIcon from "@/assets/icons/group-therapy.svg";
+import corporateIcon from "@/assets/icons/corporate-speaking.svg";
 import {
-  User,
-  Heart,
-  Users,
-  Users2,
-  Briefcase,
   ShieldCheck,
   BookOpen,
   UserCircle2,
   Quote,
+  Heart,
 } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
@@ -38,28 +39,28 @@ export const Route = createFileRoute("/about")({
 
 const audiences = [
   {
-    icon: User,
+    icon: individualIcon,
     title: "Individuals",
     body: "For anyone facing life challenges, stress, anxiety, grief, trauma, or seeking personal growth.",
   },
   {
-    icon: Heart,
+    icon: couplesIcon,
     title: "Couples",
     body: "For partners who want to improve communication, rebuild trust, and strengthen their relationship.",
   },
   {
-    icon: Users,
+    icon: familyIcon,
     title: "Families",
     body: "For families navigating conflict, transitions, or looking to build healthier connections.",
   },
   {
-    icon: Users2,
+    icon: groupIcon,
     title: "Groups",
     body: "For support groups, workshops, and therapeutic groups that foster healing and growth.",
   },
   {
-    icon: Briefcase,
-    title: "Organisations",
+    icon: corporateIcon,
+    title: "Corporate Speaking",
     body: "For companies and institutions seeking mental health support, stress management, and wellbeing solutions.",
   },
 ];
@@ -121,11 +122,14 @@ function AboutPage() {
             </p>
           </div>
         </div>
-        <div className="relative h-[650px] w-full rounded-3xl overflow-hidden shadow-xl">
+        <div className="rounded-[2rem] overflow-hidden bg-surface-2 flex items-center justify-center shadow-lg h-full min-h-[320px]">
           <img
             src={drKarume}
             alt="Dr. Michelle Karume"
-            className="object-cover w-full h-full"
+            className="object-contain w-full h-full"
+            loading="lazy"
+            width={800}
+            height={1000}
           />
         </div>
       </section>
@@ -168,7 +172,7 @@ function AboutPage() {
             {audiences.map((a) => (
               <div key={a.title}>
                 <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-primary-soft text-primary-deep">
-                  <a.icon size={24} strokeWidth={1.5} />
+                  <img src={a.icon} alt={a.title} className="h-8 w-8" loading="lazy" width={56} height={56} />
                 </span>
                 <h3 className="mt-5 text-base font-semibold">{a.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
@@ -216,6 +220,9 @@ function AboutPage() {
                 src={ctaLeft}
                 alt=""
                 className="h-full w-full object-cover"
+                loading="lazy"
+                width={400}
+                height={600}
               />
             </div>
 
@@ -227,7 +234,7 @@ function AboutPage() {
                 We're here to listen and walk with you.
               </p>
               <Button asChild size="lg" className="mt-8 rounded-full bg-[#517a61] hover:bg-[#3d5c49] text-white px-8">
-                <Link to="/booking" search={{ service: undefined }}>Book a Session</Link>
+                <Link to="/booking" search={{ service: undefined }} preload="intent">Book a Session</Link>
               </Button>
             </div>
 
@@ -236,6 +243,9 @@ function AboutPage() {
                 src={ctaRight}
                 alt=""
                 className="h-full w-full object-cover"
+                loading="lazy"
+                width={400}
+                height={600}
               />
             </div>
           </div>

@@ -53,12 +53,6 @@ const posts = [
     excerpt: "Tiny first steps for people who've been thinking about it for a while."
   },
   {
-    title: "Boundaries that breathe",
-    tag: "Relationships",
-    read: "5 min",
-    excerpt: "Boundaries as care for the relationship — not walls against the person."
-  },
-  {
     title: "Anxiety, told simply",
     tag: "Mental health",
     read: "6 min",
