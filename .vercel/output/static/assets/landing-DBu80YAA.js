@@ -1,1 +1,0 @@
-var e=`/assets/landing-CGUa8Lxk.png`;export{e as t};
