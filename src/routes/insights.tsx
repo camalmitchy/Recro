@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site/SiteShell";
 import { Button } from "@/components/ui/button";
+import { ScrollRevealSection } from "@/components/ScrollRevealSection";
 import { Play, ArrowRight, Mail } from "lucide-react";
 import { useState } from "react";
 import heroImage from "@/assets/therapy-session.jpg";
@@ -361,33 +362,34 @@ function InsightsPage() {
     return (
         <SiteShell>
             {/* HERO - MATCHING ABOUT US STRUCTURE */}
-            <section className="relative bg-surface overflow-hidden">
-                {/* Full-width background image positioned to the right */}
-                <div className="absolute inset-0">
-                    <img
-                        src={heroImage}
-                        alt="Calming therapy setting"
-                        className="absolute right-0 top-0 h-full w-full md:w-[65%] lg:w-[55%] object-cover"
-                    />
-                    {/* Gradient fade from left to right */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-surface via-surface/95 to-transparent"></div>
-                </div>
+            <ScrollRevealSection index={0}>
+                <section className="relative bg-surface overflow-hidden">
+                    {/* Full-width background image positioned to the right */}
+                    <div className="absolute inset-0">
+                        <img
+                            src={heroImage}
+                            alt="Calming therapy setting"
+                            className="absolute right-0 top-0 h-full w-full md:w-[65%] lg:w-[55%] object-cover"
+                        />
+                        {/* Gradient fade from left to right */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-surface via-surface/95 to-transparent"></div>
+                    </div>
 
-                {/* Content */}
-                <div className="relative z-10">
-                    <div className="container-page py-12 md:py-16 lg:py-20">
-                        <div className="max-w-xl lg:max-w-2xl">
-                            <span className="eyebrow">INSIGHTS</span>
-                            <h1 className="mt-6 text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.05]">
-                                Insights that support{" "}
-                                <em className="font-serif italic text-primary-deep">healing</em>.
-                            </h1>
-                            <p className="mt-6 text-muted-foreground leading-relaxed max-w-lg text-base md:text-lg">
-                                Articles, talks, and resources from our therapists to help you
-                                navigate relationships, grief, and life.
-                            </p>
-                            <div className="mt-8">
-                                {/* <Button
+                    {/* Content */}
+                    <div className="relative z-10">
+                        <div className="container-page py-12 md:py-16 lg:py-20">
+                            <div className="max-w-xl lg:max-w-2xl">
+                                <span className="eyebrow">INSIGHTS</span>
+                                <h1 className="mt-6 text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.05]">
+                                    Insights that support{" "}
+                                    <em className="font-serif italic text-primary-deep">healing</em>.
+                                </h1>
+                                <p className="mt-6 text-muted-foreground leading-relaxed max-w-lg text-base md:text-lg">
+                                    Articles, talks, and resources from our therapists to help you
+                                    navigate relationships, grief, and life.
+                                </p>
+                                <div className="mt-8">
+                                    {/* <Button
                                     size="lg"
                                     className="rounded-full"
                                     onClick={() => {
@@ -401,288 +403,297 @@ function InsightsPage() {
                                 >
                                     View all Insights
                                 </Button> */}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* FILTER BAR */}
-            <section id="filter-bar" className="bg-background border-y border-border sticky top-0 z-20">
-                <div className="container-page py-4">
-                    <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-                        {categories.map((cat) => (
-                            <button
-                                key={cat}
-                                onClick={() => handleSelectCategory(cat)}
-                                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 ${activeCategory === cat
-                                    ? "bg-primary text-white scale-105 shadow-md"
-                                    : "bg-surface text-muted-foreground hover:bg-surface-2"
-                                    }`}
-                            >
-                                {cat}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* FEATURED INSIGHT */}
-            {featuredContent && activeCategory === "All" && (
-                <section className="bg-background">
-                    <div className="container-page py-12 md:py-16">
-                        <span className="text-xs font-semibold tracking-[0.15em] uppercase text-primary-deep">
-                            FEATURED ARTICLE
-                        </span>
-                        <div className="mt-6 grid md:grid-cols-2 gap-8 items-center rounded-3xl border border-border bg-card p-6 md:p-8 card-lift">
-                            <div className="aspect-[4/3] rounded-2xl overflow-hidden">
-                                <img
-                                    src={featuredContent.image}
-                                    alt={featuredContent.title}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                            <div>
-                                <span className="inline-block px-3 py-1 rounded-full bg-primary-soft text-primary-deep text-xs font-semibold">
-                                    {featuredContent.category}
-                                </span>
-                                <h2 className="mt-4 text-2xl md:text-3xl font-semibold leading-snug">
-                                    {featuredContent.title}
-                                </h2>
-                                <p className="mt-4 text-muted-foreground leading-relaxed">
-                                    {featuredContent.excerpt}
-                                </p>
-                                <Link
-                                    to="/blog"
-                                    className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary-deep"
-                                >
-                                    Read article <ArrowRight size={16} />
-                                </Link>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </section>
-            )}
 
-            {/* UNIFIED CONTENT GRID */}
-            <section id="all-insights" className="bg-background">
-                <div className="container-page py-12 md:py-16">
-                    <div className="flex items-center justify-between mb-8">
-                        <h2 className="text-2xl md:text-3xl font-semibold transition-all duration-200">
-                            {activeCategory === "All"
-                                ? "Latest insights"
-                                : `${activeCategory}`}
-                        </h2>
-
-                        {/* Teaser state (All, not yet expanded): take the user to the full Articles list */}
-                        {isTeaser && (
-                            <button
-                                onClick={() => handleSelectCategory("Articles")}
-                                className="text-sm font-medium text-primary-deep hover:underline inline-flex items-center gap-1"
-                            >
-                                View all Articles <ArrowRight size={14} />
-                            </button>
-                        )}
-
-                        {/* Filtered by a different category: offer a way to the full Articles list */}
-                        {!isTeaser && activeCategory !== "All" && activeCategory !== "Articles" && (
-                            <button
-                                onClick={() => handleSelectCategory("Articles")}
-                                className="text-sm font-medium text-primary-deep hover:underline inline-flex items-center gap-1"
-                            >
-                                View all Articles <ArrowRight size={14} />
-                            </button>
-                        )}
-                    </div>
-
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 transition-opacity duration-300">
-                        {filteredContent.map((content) => (
-                            <article
-                                key={content.id}
-                                className="rounded-3xl border border-border bg-card overflow-hidden flex flex-col card-lift animate-in fade-in duration-300"
-                            >
-                                {content.type === "video" && "videoId" in content && (
-                                    <div className="relative aspect-video bg-black">
-                                        <img
-                                            src={
-                                                content.thumbnail ||
-                                                "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"
-                                            }
-                                            alt={content.title}
-                                            className="w-full h-full object-cover"
-                                        />
-                                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors" />
-                                        <button
-                                            aria-label={`Play ${content.title}`}
-                                            className="absolute inset-0 grid place-items-center"
-                                        >
-                                            <span className="grid h-14 w-14 place-items-center rounded-full bg-white/95 backdrop-blur shadow-lg text-primary-deep hover:scale-110 transition-transform">
-                                                <Play size={20} className="ml-0.5" fill="currentColor" />
-                                            </span>
-                                        </button>
-                                        {"duration" in content && content.duration && (
-                                            <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded bg-black/70 text-white text-xs font-medium">
-                                                {content.duration}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-
-                                {content.type === "article" && (
-                                    <div className="relative aspect-video bg-surface-2 overflow-hidden">
-                                        {"image" in content && content.image ? (
-                                            <img
-                                                src={content.image}
-                                                alt={content.title}
-                                                className="w-full h-full object-cover"
-                                            />
-                                        ) : (
-                                            <>
-                                                <div className="absolute inset-0 bg-gradient-to-br from-primary-soft via-background to-surface-2" />
-                                                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,color-mix(in_oklab,var(--primary)_25%,transparent),transparent_60%)]" />
-                                            </>
-                                        )}
-                                    </div>
-                                )}
-
-                                <div className="p-6 flex flex-col flex-1">
-                                    <div className="flex items-center gap-2 text-xs flex-wrap">
-                                        <span className="px-2.5 py-1 rounded-full bg-primary-soft text-primary-deep font-semibold">
-                                            {content.category}
-                                        </span>
-                                        <span className="px-2.5 py-1 rounded-full bg-surface text-muted-foreground font-medium">
-                                            {content.type === "video" ? "Video" : "Article"}
-                                        </span>
-                                        {"readTime" in content && content.readTime && (
-                                            <span className="text-muted-foreground">
-                                                {content.readTime} read
-                                            </span>
-                                        )}
-                                        {"duration" in content && content.duration && (
-                                            <span className="text-muted-foreground">
-                                                {content.duration}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <h3 className="mt-4 text-lg font-semibold leading-snug line-clamp-2">
-                                        {content.title}
-                                    </h3>
-                                    <p className="mt-2 text-sm text-muted-foreground leading-relaxed flex-1 line-clamp-3">
-                                        {content.excerpt}
-                                    </p>
-                                    <Link
-                                        to={content.type === "video" ? "/media" : "/blog"}
-                                        className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-deep"
-                                    >
-                                        {content.type === "video" ? "Watch now" : "Read article"}{" "}
-                                        <ArrowRight size={13} />
-                                    </Link>
-                                </div>
-                            </article>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* POPULAR VIDEOS CAROUSEL */}
-            {activeCategory === "All" && (
-                <section className="bg-surface border-y border-border">
-                    <div className="container-page py-12 md:py-16">
-                        <div className="flex items-center justify-between mb-8">
-                            <div>
-                                <span className="text-xs font-semibold tracking-[0.15em] uppercase text-primary-deep">
-                                    POPULAR VIDEOS
-                                </span>
-                                <h2 className="mt-2 text-2xl md:text-3xl font-semibold">
-                                    Most watched
-                                </h2>
-                            </div>
-                            <button
-                                onClick={() => {
-                                    setActiveCategory("Videos");
-                                    setTimeout(() => {
-                                        document
-                                            .getElementById("filter-bar")
-                                            ?.scrollIntoView({ behavior: "smooth", block: "start" });
-                                    }, 100);
-                                }}
-                                className="text-sm font-medium text-primary-deep hover:underline hidden md:inline-flex items-center gap-1"
-                            >
-                                View all videos <ArrowRight size={14} />
-                            </button>
-                        </div>
-
-                        <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-2">
-                            {popularVideos.map((video) => (
-                                <VideoCard key={video.id} video={video} compact />
+                {/* FILTER BAR */}
+                <section id="filter-bar" className="bg-background border-y border-border sticky top-0 z-20">
+                    <div className="container-page py-4">
+                        <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+                            {categories.map((cat) => (
+                                <button
+                                    key={cat}
+                                    onClick={() => handleSelectCategory(cat)}
+                                    className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 ${activeCategory === cat
+                                        ? "bg-primary text-white scale-105 shadow-md"
+                                        : "bg-surface text-muted-foreground hover:bg-surface-2"
+                                        }`}
+                                >
+                                    {cat}
+                                </button>
                             ))}
                         </div>
-
-                        <button
-                            onClick={() => {
-                                setActiveCategory("Videos");
-                                setTimeout(() => {
-                                    document
-                                        .getElementById("filter-bar")
-                                        ?.scrollIntoView({ behavior: "smooth", block: "start" });
-                                }, 100);
-                            }}
-                            className="mt-6 text-sm font-medium text-primary-deep hover:underline md:hidden inline-flex items-center gap-1"
-                        >
-                            View all videos <ArrowRight size={14} />
-                        </button>
                     </div>
                 </section>
-            )}
 
-            {/* NEWSLETTER CTA */}
-            <section className="bg-background">
-                <div className="container-page py-12 md:py-16">
-                    <div className="rounded-3xl border border-border bg-card p-6 md:p-8 card-lift flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
-                        <div className="flex items-center gap-4 md:flex-1">
-                            <span className="shrink-0 inline-grid h-14 w-14 place-items-center rounded-full bg-primary-soft text-primary-deep">
-                                <Mail size={24} strokeWidth={1.5} />
-                            </span>
-                            <div>
-                                <h2 className="text-xl md:text-2xl font-semibold tracking-tight">
-                                    Stay connected
+                {/* FEATURED INSIGHT */}
+                {featuredContent && activeCategory === "All" && (
+                    <ScrollRevealSection index={1}>
+                        <section className="bg-background">
+                            <div className="container-page py-12 md:py-16">
+                                <span className="text-xs font-semibold tracking-[0.15em] uppercase text-primary-deep">
+                                    FEATURED ARTICLE
+                                </span>
+                                <div className="mt-6 grid md:grid-cols-2 gap-8 items-center rounded-3xl border border-border bg-card p-6 md:p-8 card-lift">
+                                    <div className="aspect-[4/3] rounded-2xl overflow-hidden">
+                                        <img
+                                            src={featuredContent.image}
+                                            alt={featuredContent.title}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                    <div>
+                                        <span className="inline-block px-3 py-1 rounded-full bg-primary-soft text-primary-deep text-xs font-semibold">
+                                            {featuredContent.category}
+                                        </span>
+                                        <h2 className="mt-4 text-2xl md:text-3xl font-semibold leading-snug">
+                                            {featuredContent.title}
+                                        </h2>
+                                        <p className="mt-4 text-muted-foreground leading-relaxed">
+                                            {featuredContent.excerpt}
+                                        </p>
+                                        <Link
+                                            to="/blog"
+                                            className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary-deep"
+                                        >
+                                            Read article <ArrowRight size={16} />
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </ScrollRevealSection>
+                )}
+
+                {/* UNIFIED CONTENT GRID */}
+                <ScrollRevealSection index={2}>
+                    <section id="all-insights" className="bg-background">
+                        <div className="container-page py-12 md:py-16">
+                            <div className="flex items-center justify-between mb-8">
+                                <h2 className="text-2xl md:text-3xl font-semibold transition-all duration-200">
+                                    {activeCategory === "All"
+                                        ? "Latest insights"
+                                        : `${activeCategory}`}
                                 </h2>
-                                <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-                                    Get new insights, videos, and resources delivered to your
-                                    inbox.
-                                </p>
+
+                                {/* Teaser state (All, not yet expanded): take the user to the full Articles list */}
+                                {isTeaser && (
+                                    <button
+                                        onClick={() => handleSelectCategory("Articles")}
+                                        className="text-sm font-medium text-primary-deep hover:underline inline-flex items-center gap-1"
+                                    >
+                                        View all Articles <ArrowRight size={14} />
+                                    </button>
+                                )}
+
+                                {/* Filtered by a different category: offer a way to the full Articles list */}
+                                {!isTeaser && activeCategory !== "All" && activeCategory !== "Articles" && (
+                                    <button
+                                        onClick={() => handleSelectCategory("Articles")}
+                                        className="text-sm font-medium text-primary-deep hover:underline inline-flex items-center gap-1"
+                                    >
+                                        View all Articles <ArrowRight size={14} />
+                                    </button>
+                                )}
+                            </div>
+
+                            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 transition-opacity duration-300">
+                                {filteredContent.map((content) => (
+                                    <article
+                                        key={content.id}
+                                        className="rounded-3xl border border-border bg-card overflow-hidden flex flex-col card-lift animate-in fade-in duration-300"
+                                    >
+                                        {content.type === "video" && "videoId" in content && (
+                                            <div className="relative aspect-video bg-black">
+                                                <img
+                                                    src={
+                                                        content.thumbnail ||
+                                                        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"
+                                                    }
+                                                    alt={content.title}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors" />
+                                                <button
+                                                    aria-label={`Play ${content.title}`}
+                                                    className="absolute inset-0 grid place-items-center"
+                                                >
+                                                    <span className="grid h-14 w-14 place-items-center rounded-full bg-white/95 backdrop-blur shadow-lg text-primary-deep hover:scale-110 transition-transform">
+                                                        <Play size={20} className="ml-0.5" fill="currentColor" />
+                                                    </span>
+                                                </button>
+                                                {"duration" in content && content.duration && (
+                                                    <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded bg-black/70 text-white text-xs font-medium">
+                                                        {content.duration}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {content.type === "article" && (
+                                            <div className="relative aspect-video bg-surface-2 overflow-hidden">
+                                                {"image" in content && content.image ? (
+                                                    <img
+                                                        src={content.image}
+                                                        alt={content.title}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <>
+                                                        <div className="absolute inset-0 bg-gradient-to-br from-primary-soft via-background to-surface-2" />
+                                                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,color-mix(in_oklab,var(--primary)_25%,transparent),transparent_60%)]" />
+                                                    </>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        <div className="p-6 flex flex-col flex-1">
+                                            <div className="flex items-center gap-2 text-xs flex-wrap">
+                                                <span className="px-2.5 py-1 rounded-full bg-primary-soft text-primary-deep font-semibold">
+                                                    {content.category}
+                                                </span>
+                                                <span className="px-2.5 py-1 rounded-full bg-surface text-muted-foreground font-medium">
+                                                    {content.type === "video" ? "Video" : "Article"}
+                                                </span>
+                                                {"readTime" in content && content.readTime && (
+                                                    <span className="text-muted-foreground">
+                                                        {content.readTime} read
+                                                    </span>
+                                                )}
+                                                {"duration" in content && content.duration && (
+                                                    <span className="text-muted-foreground">
+                                                        {content.duration}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <h3 className="mt-4 text-lg font-semibold leading-snug line-clamp-2">
+                                                {content.title}
+                                            </h3>
+                                            <p className="mt-2 text-sm text-muted-foreground leading-relaxed flex-1 line-clamp-3">
+                                                {content.excerpt}
+                                            </p>
+                                            <Link
+                                                to={content.type === "video" ? "/media" : "/blog"}
+                                                className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-deep"
+                                            >
+                                                {content.type === "video" ? "Watch now" : "Read article"}{" "}
+                                                <ArrowRight size={13} />
+                                            </Link>
+                                        </div>
+                                    </article>
+                                ))}
                             </div>
                         </div>
-                        <form
-                            className="flex flex-col sm:flex-row gap-3 md:w-auto md:min-w-[380px]"
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                // Handle newsletter subscription
-                                console.log("Subscribe:", email);
-                            }}
-                        >
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="Your email address"
-                                required
-                                className="flex-1 px-5 py-3 rounded-full border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-                            />
-                            <Button
-                                type="submit"
-                                size="lg"
-                                className="rounded-full shrink-0"
-                            >
-                                Subscribe
-                            </Button>
-                        </form>
-                    </div>
-                    <p className="mt-4 text-xs text-muted-foreground text-center md:text-left">
-                        We respect your privacy. Unsubscribe anytime.
-                    </p>
-                </div>
-            </section>
+                    </section>
+                </ScrollRevealSection>
+
+                {/* POPULAR VIDEOS CAROUSEL */}
+                {activeCategory === "All" && (
+                    <ScrollRevealSection index={3}>
+                        <section className="bg-surface border-y border-border">
+                            <div className="container-page py-12 md:py-16">
+                                <div className="flex items-center justify-between mb-8">
+                                    <div>
+                                        <span className="text-xs font-semibold tracking-[0.15em] uppercase text-primary-deep">
+                                            POPULAR VIDEOS
+                                        </span>
+                                        <h2 className="mt-2 text-2xl md:text-3xl font-semibold">
+                                            Most watched
+                                        </h2>
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            setActiveCategory("Videos");
+                                            setTimeout(() => {
+                                                document
+                                                    .getElementById("filter-bar")
+                                                    ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                                            }, 100);
+                                        }}
+                                        className="text-sm font-medium text-primary-deep hover:underline hidden md:inline-flex items-center gap-1"
+                                    >
+                                        View all videos <ArrowRight size={14} />
+                                    </button>
+                                </div>
+
+                                <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-2">
+                                    {popularVideos.map((video) => (
+                                        <VideoCard key={video.id} video={video} compact />
+                                    ))}
+                                </div>
+
+                                <button
+                                    onClick={() => {
+                                        setActiveCategory("Videos");
+                                        setTimeout(() => {
+                                            document
+                                                .getElementById("filter-bar")
+                                                ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                                        }, 100);
+                                    }}
+                                    className="mt-6 text-sm font-medium text-primary-deep hover:underline md:hidden inline-flex items-center gap-1"
+                                >
+                                    View all videos <ArrowRight size={14} />
+                                </button>
+                            </div>
+                        </section>
+                    </ScrollRevealSection>
+                )}
+
+                {/* NEWSLETTER CTA */}
+                <ScrollRevealSection index={4}>
+                    <section className="bg-background">
+                        <div className="container-page py-12 md:py-16">
+                            <div className="rounded-3xl border border-border bg-card p-6 md:p-8 card-lift flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
+                                <div className="flex items-center gap-4 md:flex-1">
+                                    <span className="shrink-0 inline-grid h-14 w-14 place-items-center rounded-full bg-primary-soft text-primary-deep">
+                                        <Mail size={24} strokeWidth={1.5} />
+                                    </span>
+                                    <div>
+                                        <h2 className="text-xl md:text-2xl font-semibold tracking-tight">
+                                            Stay connected
+                                        </h2>
+                                        <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+                                            Get new insights, videos, and resources delivered to your
+                                            inbox.
+                                        </p>
+                                    </div>
+                                </div>
+                                <form
+                                    className="flex flex-col sm:flex-row gap-3 md:w-auto md:min-w-[380px]"
+                                    onSubmit={(e) => {
+                                        e.preventDefault();
+                                        // Handle newsletter subscription
+                                        console.log("Subscribe:", email);
+                                    }}
+                                >
+                                    <input
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        placeholder="Your email address"
+                                        required
+                                        className="flex-1 px-5 py-3 rounded-full border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                                    />
+                                    <Button
+                                        type="submit"
+                                        size="lg"
+                                        className="rounded-full shrink-0"
+                                    >
+                                        Subscribe
+                                    </Button>
+                                </form>
+                            </div>
+                            <p className="mt-4 text-xs text-muted-foreground text-center md:text-left">
+                                We respect your privacy. Unsubscribe anytime.
+                            </p>
+                        </div>
+                    </section>
+                </ScrollRevealSection>
+            </ScrollRevealSection>
         </SiteShell>
     );
 }

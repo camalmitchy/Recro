@@ -123,32 +123,52 @@ function BookingPage() {
 
   const createBookingIfNeeded = async () => {
     if (bookingId || !user) return bookingId;
-    setCreating(true);
-    const reference = "RG-" + Math.random().toString(36).slice(2, 8).toUpperCase();
-    const { data, error } = await supabase
-      .from("bookings")
-      .insert({
-        user_id: user.id,
-        reference,
-        client_name: name || user.email || "Client",
-        client_email: email || user.email || "",
-        client_phone: phone,
-        preferred_date: dateKey,
-        preferred_time: time,
-        notes: `${service.label} · ${format === "video" ? "Video" : "In person"} · ${clinician.name}${notes ? "\n" + notes : ""}`,
-        amount_kes: service.amount,
-        status: "pending",
-        payment_status: "pending",
-      })
-      .select()
-      .single();
-    setCreating(false);
-    if (error) {
-      toast.error(error.message);
+
+    // Validate user.id is a valid UUID
+    if (!user.id || typeof user.id !== 'string') {
+      toast.error("Authentication error. Please log in again.");
+      navigate({ to: "/login" });
       return null;
     }
-    setBookingId(data.id);
-    return data.id as string;
+
+    setCreating(true);
+    const reference = "RG-" + Math.random().toString(36).slice(2, 8).toUpperCase();
+
+    try {
+      const { data, error } = await supabase
+        .from("bookings")
+        .insert({
+          user_id: user.id,
+          reference,
+          client_name: name || user.email || "Client",
+          client_email: email || user.email || "",
+          client_phone: phone,
+          preferred_date: dateKey,
+          preferred_time: time,
+          notes: `${service.label} · ${format === "video" ? "Video" : "In person"} · ${clinician.name}${notes ? "\n" + notes : ""}`,
+          amount_kes: service.amount,
+          status: "pending",
+          payment_status: "pending",
+        })
+        .select()
+        .single();
+
+      setCreating(false);
+
+      if (error) {
+        console.error("Booking creation error:", error);
+        toast.error(`Booking failed: ${error.message}`);
+        return null;
+      }
+
+      setBookingId(data.id);
+      return data.id as string;
+    } catch (err: any) {
+      setCreating(false);
+      console.error("Booking creation exception:", err);
+      toast.error(`Error: ${err.message || "Failed to create booking"}`);
+      return null;
+    }
   };
 
   const onNext = async () => {
@@ -190,10 +210,10 @@ function BookingPage() {
               <li key={s} className="flex items-center gap-3">
                 <span
                   className={`grid h-9 w-9 place-items-center rounded-full text-sm font-semibold transition ${done
-                      ? "bg-primary text-primary-foreground"
-                      : active
-                        ? "border-2 border-primary text-primary-deep bg-background"
-                        : "border-2 border-border text-muted-foreground bg-background"
+                    ? "bg-primary text-primary-foreground"
+                    : active
+                      ? "border-2 border-primary text-primary-deep bg-background"
+                      : "border-2 border-border text-muted-foreground bg-background"
                     }`}
                 >
                   {done ? <Check size={16} /> : i + 1}
@@ -213,7 +233,7 @@ function BookingPage() {
         <div className="mt-8 border-t border-border" />
 
         <div className={`mt-10 grid gap-10 ${showSummary && step === 3 ? "lg:grid-cols-[1fr_360px]" : ""}`}>
-          <div>
+          <div className="min-w-0 overflow-hidden">{/* min-w-0 prevents flex/grid item overflow */}
             {step === 0 && (
               <div className="grid md:grid-cols-2 gap-5">
                 {SERVICES.map((s) => {
@@ -272,8 +292,8 @@ function BookingPage() {
                           key={d.key}
                           onClick={() => setDateKey(d.key)}
                           className={`shrink-0 w-[88px] rounded-2xl border px-3 py-3 text-center transition ${sel
-                              ? "bg-primary text-primary-foreground border-primary"
-                              : "border-border bg-card hover:border-primary"
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "border-border bg-card hover:border-primary"
                             }`}
                         >
                           <p className={`text-[11px] tracking-[0.18em] font-semibold ${sel ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
@@ -290,22 +310,24 @@ function BookingPage() {
                 </div>
 
                 <h2 className="mt-10 font-serif text-2xl font-semibold">Pick a time</h2>
-                <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                  {TIME_SLOTS.map((t) => {
-                    const sel = t === time;
-                    return (
-                      <button
-                        key={t}
-                        onClick={() => setTime(t)}
-                        className={`rounded-2xl border px-4 py-3 text-sm font-medium transition ${sel
+                <div className="mt-4 -mx-2 overflow-x-auto pb-2">
+                  <div className="px-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 min-w-max">
+                    {TIME_SLOTS.map((t) => {
+                      const sel = t === time;
+                      return (
+                        <button
+                          key={t}
+                          onClick={() => setTime(t)}
+                          className={`shrink-0 w-full min-w-[100px] rounded-2xl border px-4 py-3 text-sm font-medium transition ${sel
                             ? "bg-primary text-primary-foreground border-primary"
                             : "border-border bg-card hover:border-primary"
-                          }`}
-                      >
-                        {t}
-                      </button>
-                    );
-                  })}
+                            }`}
+                        >
+                          {t}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             )}
