@@ -255,6 +255,7 @@ function HomePage() {
         </div>
       </section>
 
+
       {/* APPROACH */}
       <section className="bg-surface border-y border-border">
         <div className="container-page py-20 grid lg:grid-cols-2 gap-12 items-center">
