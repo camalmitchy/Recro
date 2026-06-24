@@ -1,0 +1,4 @@
+//#region node_modules/.nitro/vite/services/ssr/assets/grief-camp-B9WMM4YQ.js
+var grief_camp_default = "data:image/svg+xml,%3csvg%20viewBox='0%200%20100%20100'%20xmlns='http://www.w3.org/2000/svg'%3e%3c!--%20Outer%20circle%20-%20olive%20green%20--%3e%3ccircle%20cx='50'%20cy='50'%20r='48'%20fill='%236B7D4F'/%3e%3c!--%20Inner%20white%20circle%20--%3e%3ccircle%20cx='50'%20cy='50'%20r='38'%20fill='white'/%3e%3c!--%20Icon%20-%20dark%20olive%20(two%20mountain/tent%20shapes)%20--%3e%3cg%20fill='%234A5A35'%3e%3cpath%20d='M%2035%2042%20L%2043%2060%20L%2027%2060%20Z'%20/%3e%3cpath%20d='M%2050%2035%20L%2065%2065%20L%2035%2065%20Z'%20/%3e%3c/g%3e%3c/svg%3e";
+//#endregion
+export { grief_camp_default as t };
