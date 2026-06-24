@@ -302,7 +302,7 @@ function ServiceDetailPage() {
                                     alt={service.title}
                                     width={1024}
                                     height={1024}
-                                    fetchpriority="high"
+                                    fetchPriority="high"
                                     className="w-full h-full object-cover"
                                 />
                             </div>
