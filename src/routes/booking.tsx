@@ -107,10 +107,7 @@ function BookingPage() {
   const clinician = CLINICIANS.find((c) => c.id === clinicianId)!;
   const selectedDate = dateStrip.find((d) => d.key === dateKey) ?? dateStrip[0];
 
-  useEffect(() => {
-    if (!loading && !user) navigate({ to: "/join-us" });
-  }, [loading, user, navigate]);
-
+  // Removed authentication requirement - guests can book
   useEffect(() => {
     if (user) {
       setName((n) => n || user.user_metadata?.full_name || "");
@@ -122,12 +119,11 @@ function BookingPage() {
   const whenLabel = `${selectedDate.dow.charAt(0)}${selectedDate.dow.slice(1).toLowerCase()} ${selectedDate.day} ${selectedDate.mon}, ${time}`;
 
   const createBookingIfNeeded = async () => {
-    if (bookingId || !user) return bookingId;
+    if (bookingId) return bookingId;
 
-    // Validate user.id is a valid UUID
-    if (!user.id || typeof user.id !== 'string') {
-      toast.error("Authentication error. Please log in again.");
-      navigate({ to: "/login" });
+    // Validate guest information
+    if (!name.trim() || !email.trim() || !phone.trim()) {
+      toast.error("Please provide your name, email, and phone number");
       return null;
     }
 
@@ -135,21 +131,27 @@ function BookingPage() {
     const reference = "RG-" + Math.random().toString(36).slice(2, 8).toUpperCase();
 
     try {
+      const bookingData: any = {
+        reference,
+        client_name: name.trim(),
+        client_email: email.trim(),
+        client_phone: phone.trim(),
+        preferred_date: dateKey,
+        preferred_time: time,
+        notes: `${service.label} · ${format === "video" ? "Video" : "In person"} · ${clinician.name}${notes ? "\n" + notes : ""}`,
+        amount_kes: service.amount,
+        status: "pending",
+        payment_status: "pending",
+      };
+
+      // Add user_id only if user is authenticated
+      if (user?.id) {
+        bookingData.user_id = user.id;
+      }
+
       const { data, error } = await supabase
         .from("bookings")
-        .insert({
-          user_id: user.id,
-          reference,
-          client_name: name || user.email || "Client",
-          client_email: email || user.email || "",
-          client_phone: phone,
-          preferred_date: dateKey,
-          preferred_time: time,
-          notes: `${service.label} · ${format === "video" ? "Video" : "In person"} · ${clinician.name}${notes ? "\n" + notes : ""}`,
-          amount_kes: service.amount,
-          status: "pending",
-          payment_status: "pending",
-        })
+        .insert(bookingData)
         .select()
         .single();
 
@@ -162,6 +164,7 @@ function BookingPage() {
       }
 
       setBookingId(data.id);
+      toast.success("Booking created successfully!");
       return data.id as string;
     } catch (err: any) {
       setCreating(false);
@@ -175,6 +178,10 @@ function BookingPage() {
     if (step === 2) {
       if (!notes.trim()) {
         toast.error("Please share a short note so your clinician can prepare.");
+        return;
+      }
+      if (!name.trim() || !email.trim() || !phone.trim()) {
+        toast.error("Please provide your contact details (name, email, and phone)");
         return;
       }
       const id = await createBookingIfNeeded();
@@ -368,10 +375,13 @@ function BookingPage() {
                   className="mt-3 w-full rounded-2xl border border-border bg-card px-5 py-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 resize-y"
                 />
 
-                <div className="mt-6 grid sm:grid-cols-3 gap-4">
-                  <Field label="Full name" value={name} onChange={setName} placeholder="Jane Doe" />
-                  <Field label="Email" type="email" value={email} onChange={setEmail} placeholder="jane@example.com" />
-                  <Field label="Phone" value={phone} onChange={setPhone} placeholder="+254 7XX XXX XXX" />
+                <p className="mt-8 text-[11px] tracking-[0.18em] font-semibold uppercase text-muted-foreground">
+                  Your contact details *
+                </p>
+                <div className="mt-3 grid sm:grid-cols-3 gap-4">
+                  <Field label="Full name *" value={name} onChange={setName} placeholder="Jane Doe" />
+                  <Field label="Email *" type="email" value={email} onChange={setEmail} placeholder="jane@example.com" />
+                  <Field label="Phone *" value={phone} onChange={setPhone} placeholder="+254 7XX XXX XXX" />
                 </div>
               </div>
             )}
@@ -386,7 +396,7 @@ function BookingPage() {
                   setStep(4);
                 }}
                 stkPush={stkPush}
-                userId={user!.id}
+                userId={user?.id}
               />
             )}
 
@@ -443,9 +453,15 @@ function BookingPage() {
               )}
             </button>
           ) : step === 4 ? (
-            <Link to="/profile" className="btn-primary">
-              View my bookings <Check size={15} />
-            </Link>
+            user ? (
+              <Link to="/profile" className="btn-primary">
+                View my bookings <Check size={15} />
+              </Link>
+            ) : (
+              <Link to="/services" className="btn-primary">
+                Back to services <ArrowRight size={15} />
+              </Link>
+            )
           ) : null}
         </div>
       </section>
@@ -475,7 +491,7 @@ function PaymentStep({
   amount: number;
   onPaid: () => void;
   stkPush: (args: { data: { bookingId: string; phone: string; amountKes: number } }) => Promise<any>;
-  userId: string;
+  userId: string | undefined;
 }) {
   const [method, setMethod] = useState<"mpesa" | "bank">("mpesa");
   const [mpesaPhone, setMpesaPhone] = useState(phone);
@@ -520,20 +536,29 @@ function PaymentStep({
     }
     setUploading(true);
     try {
+      // For guest users without userId, use booking ID for storage path
+      const userPath = userId || `guest-${bookingId}`;
       const ext = proof.name.split(".").pop() ?? "pdf";
-      const path = `${userId}/${bookingId}-${Date.now()}.${ext}`;
+      const path = `${userPath}/${bookingId}-${Date.now()}.${ext}`;
       const up = await supabase.storage.from("payment-proofs").upload(path, proof, { upsert: false });
       if (up.error) throw up.error;
-      const { error } = await supabase.from("payments").insert({
+
+      const paymentData: any = {
         booking_id: bookingId,
-        user_id: userId,
         method: "bank",
         amount_kes: amount,
         reference: bankRef.trim(),
         proof_url: path,
         status: "pending",
         notes: "SBM Bank transfer — awaiting admin verification",
-      });
+      };
+
+      // Add user_id only if user is authenticated
+      if (userId) {
+        paymentData.user_id = userId;
+      }
+
+      const { error } = await supabase.from("payments").insert(paymentData);
       if (error) throw error;
       toast.success("Proof uploaded. We'll verify and confirm by email.");
       onPaid();
